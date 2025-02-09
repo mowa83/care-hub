@@ -15,7 +15,9 @@ Widget customButton({
   String? svgIcon,
   MainAxisAlignment? textAlignment,
   required String text,
-  FontWeight?fontWeight
+  FontWeight?fontWeight,
+  Color? backgroundColor,
+  Color? textColor,
 }) {
   return Container(
     height: height ?? 56.h,
@@ -27,7 +29,7 @@ Widget customButton({
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(borderRadius ?? 14)),
       ),
-      color: AppColor.primarycolor,
+      color: backgroundColor??AppColor.primarycolor,
       elevation: 0,
       child: Row(
         mainAxisAlignment:textAlignment?? MainAxisAlignment.center,
@@ -41,7 +43,7 @@ Widget customButton({
             ),
           Text(text,
               style: textStyle16(
-                  color: Colors.white,
+                  color:textColor?? Colors.white,
                   letterSpacing: letterSpacing ?? -.30,
                   height: lineHeight,
               fontWeight:fontWeight )),

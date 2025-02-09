@@ -57,6 +57,10 @@ TextStyle textStyle16({
   double? height,
   Color? color,
   FontWeight? fontWeight,
+  TextDecoration?decoration,
+  TextDecorationStyle?decorationStyle,
+  Color?decorationColor
+
 }) {
   return GoogleFonts.poppins(
     color: color ?? AppColor.primarycolor,
@@ -64,6 +68,10 @@ TextStyle textStyle16({
     fontSize: fontSize ?? 16.sp,
     letterSpacing: letterSpacing,
     height: height,
+    decoration:decoration,
+    decorationStyle:decorationStyle,
+    decorationColor:decorationColor
+
   );
 }
 

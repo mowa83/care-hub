@@ -1,5 +1,5 @@
 import 'package:graduation_project/core/utils/colors.dart';
-import 'package:graduation_project/features/home/presentation/views/widgets/choose_row.dart';
+import 'package:graduation_project/features/patient/home/presentation/views/widgets/choose_row.dart';
 import 'package:graduation_project/widgets/app_contact_card.dart';
 import 'package:flutter/material.dart';
 

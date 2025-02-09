@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:graduation_project/features/splash/presentation/views/splash1_view.dart';
+// import 'package:graduation_project/features/doctor/home/presentation/views/home_view.dart';
+import 'package:graduation_project/features/nurse/home/presentation/views/home_view.dart';
+import 'package:graduation_project/features/patient/splash/presentation/views/splash1_view.dart';
 
 
 void main() {
@@ -30,7 +32,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
       ),
-      home:Splash1View(),
+      home:HomeView(),
     );
   }
 }

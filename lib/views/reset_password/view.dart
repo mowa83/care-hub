@@ -1,6 +1,6 @@
 import 'package:graduation_project/core/utils/colors.dart';
 import 'package:graduation_project/core/utils/validator.dart';
-import 'package:graduation_project/features/home/presentation/views/widgets/choose_row.dart';
+import 'package:graduation_project/features/patient/home/presentation/views/widgets/choose_row.dart';
 import 'package:graduation_project/views/login/view.dart';
 import 'package:graduation_project/widgets/app_button.dart';
 import 'package:graduation_project/widgets/app_head_line.dart';
