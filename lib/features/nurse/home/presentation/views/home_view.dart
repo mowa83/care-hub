@@ -14,7 +14,7 @@ class _HomeViewState extends State<HomeView> {
   int selectedIndex = 0;
   final List<Widget> pages = [
     const ProfileView(),
-    const ProfileView()
+    const ProfileView(),
   ];
   @override
   Widget build(BuildContext context) {

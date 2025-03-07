@@ -14,6 +14,8 @@ class HomeBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 80.h,
+      // width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -61,7 +63,7 @@ class HomeBottomNavBar extends StatelessWidget {
                     BlendMode.srcIn,
                   ),
                 ),
-                text: calendarText!,
+                text: calendarText??'calender',
                 icon: Icons.account_circle,
                 padding:
                     const EdgeInsets.symmetric(vertical: 9, horizontal: 11),
