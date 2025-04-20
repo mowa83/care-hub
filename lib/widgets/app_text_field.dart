@@ -6,11 +6,13 @@ class AppTextField extends StatefulWidget {
   final String hint;
   final String? Function(String? v)? validator;
   final bool secure;
+  final TextEditingController? controller;
   const AppTextField({
     super.key,
     required this.hint,
     this.validator,
     this.secure = false,
+    this.controller,
   });
 
   @override
@@ -33,6 +35,7 @@ class _AppTextFieldState extends State<AppTextField> {
       children: [
         SizedBox(height: 8),
         TextFormField(
+          controller: widget.controller,
           cursorColor: AppColors.primary,
           validator: widget.validator,
           obscureText: secure,
