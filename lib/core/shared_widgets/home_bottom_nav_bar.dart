@@ -14,8 +14,8 @@ class HomeBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 80.h,
-      // width: double.infinity,
+      // height: 70.h,
+      // width: 100.w,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -42,9 +42,11 @@ class HomeBottomNavBar extends StatelessWidget {
             onTabChange: onTap,
             textStyle: textStyle8(fontSize: 12, letterSpacing: .1),
             tabs: [
-              if(nurse==false)GButton(
+              if(!nurse)GButton(
                 leading: SvgPicture.asset(
                   'assets/icons/home.svg',
+                  width: 24,
+                  height: 24,
                   colorFilter: ColorFilter.mode(
                     currentIndex == 0 ? Colors.white : const Color(0xffAAACAE),
                     BlendMode.srcIn,
@@ -55,9 +57,11 @@ class HomeBottomNavBar extends StatelessWidget {
                 padding: const EdgeInsets.only(
                     left: 9, top: 11, right: 16, bottom: 11),
               ),
-              if(nurse==false)GButton(
+              if(!nurse)GButton(
                 leading: SvgPicture.asset(
                   'assets/icons/calendar.svg',
+                  width: 24,
+                  height: 24,
                   colorFilter: ColorFilter.mode(
                     currentIndex == 1 ? Colors.white : const Color(0xffAAACAE),
                     BlendMode.srcIn,
@@ -71,6 +75,8 @@ class HomeBottomNavBar extends StatelessWidget {
               GButton(
                 leading: SvgPicture.asset(
                   'assets/icons/chats.svg',
+                  width: 24,
+                  height: 24,
                   colorFilter: ColorFilter.mode(
                     currentIndex == 2 ? Colors.white : const Color(0xffAAACAE),
                     BlendMode.srcIn,
@@ -84,6 +90,8 @@ class HomeBottomNavBar extends StatelessWidget {
               GButton(
                 leading: SvgPicture.asset(
                   'assets/icons/profile.svg',
+                  width: 24,
+                  height: 24,
                   colorFilter: ColorFilter.mode(
                     currentIndex == 3 ? Colors.white : const Color(0xffAAACAE),
                     BlendMode.srcIn,

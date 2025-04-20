@@ -1,20 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:graduation_project/core/themes/text_styles.dart';
-import 'package:graduation_project/features/patient/home/presentation/views/widgets/doctors_offers.dart';
+import 'package:graduation_project/features/patient/all_offers/presentation/views/widgets/doctors_offers.dart';
 import 'package:graduation_project/features/patient/home/presentation/views/widgets/our_offers_row.dart';
 import 'package:graduation_project/features/patient/home/presentation/views/widgets/searchfor_doctor_stack.dart';
 import 'package:graduation_project/features/patient/home/presentation/views/widgets/services_row.dart';
 import 'package:graduation_project/features/patient/home/presentation/views/widgets/welcome_back_row.dart';
 
+import '../../../../all_offers/data/models/offers_model.dart';
+import '../../../../all_offers/presentation/view model/offers_api_service.dart';
 
-class HomeBody extends StatelessWidget {
+
+class HomeBody extends StatefulWidget {
   const HomeBody({super.key});
 
   @override
+  State<HomeBody> createState() => _HomeBodyState();
+}
+
+class _HomeBodyState extends State<HomeBody> {
+  late final Future<List<Result>?> offerFuture;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    offerFuture = OffersApiService().fetchOffers();
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+      body: FutureBuilder<List<Result>?>(
+        future: offerFuture,
+        builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: CircularProgressIndicator());
+      } else if (snapshot.hasError || snapshot.data == null) {
+        return const Center(child: Text("Failed to load the Profile"));
+      }
+
+      final offer = snapshot.data!;
+      return SingleChildScrollView(
         child: Container(
           alignment: Alignment.center,
           child: Padding(
@@ -53,7 +78,12 @@ class HomeBody extends StatelessWidget {
                       );
                     },
                     itemBuilder: (context, index) {
-                      return const DoctorsOffers();
+                      return  DoctorsOffers(
+                        doctorName: offer[index].user?.username ?? '',
+                        doctorSpecialty:offer[index].specialty?.name??'' ,
+                        price: offer[index].price??0,
+                        offer:offer[index].offer??0 ,
+                      );
                     },
                     itemCount: 3,
                     shrinkWrap: true,
@@ -65,7 +95,7 @@ class HomeBody extends StatelessWidget {
             ),
           ),
         ),
-      ),
+      );})
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:graduation_project/core/themes/colors.dart';
 import 'package:graduation_project/core/themes/text_styles.dart';
+import 'package:graduation_project/features/patient/all_offers/presentation/views/all_offers_view.dart';
 
 class OurOffersRow extends StatelessWidget {
   const OurOffersRow({super.key});
@@ -20,7 +21,10 @@ class OurOffersRow extends StatelessWidget {
                 textStyle18(fontSize: 16.sp, height: 1.5, letterSpacing: .008),
           ),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => AllOffersView()));
+            },
             child: Row(
               children: [
                 Text(

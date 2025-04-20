@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:graduation_project/core/themes/colors.dart';
 import 'package:graduation_project/core/themes/text_styles.dart';
 
-class ChooseRow extends StatelessWidget {
-  const ChooseRow({super.key, required this.text});
+class HeaderRow extends StatelessWidget {
+  const HeaderRow({super.key, required this.text});
   final String text;
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class ChooseRow extends StatelessWidget {
         children: [
           Container(
             width: 34.w,
-            height: 34,
+            height: 34.h,
             margin: EdgeInsets.only(left: 19.w),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),

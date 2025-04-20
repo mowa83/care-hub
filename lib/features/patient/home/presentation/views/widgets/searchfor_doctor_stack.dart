@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:graduation_project/core/themes/text_styles.dart';
-import 'package:graduation_project/features/patient/home/presentation/views/choose_specialty_view.dart';
+import 'package:graduation_project/features/patient/specialty/presentation/views/choose_specialty_view.dart';
 
 class SearchForDoctorStack extends StatelessWidget {
   const SearchForDoctorStack({super.key});

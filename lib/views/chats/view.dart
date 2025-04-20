@@ -1,5 +1,5 @@
 import 'package:graduation_project/core/utils/colors.dart';
-import 'package:graduation_project/features/patient/home/presentation/views/widgets/choose_row.dart';
+import 'package:graduation_project/core/shared_widgets/header_row.dart';
 import 'package:graduation_project/widgets/app_contact_card.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +10,7 @@ class ChatView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(padding: EdgeInsets.all(16), children: [
-        const ChooseRow(
+        const HeaderRow(
           text: 'Chats',
         ),
         SizedBox(

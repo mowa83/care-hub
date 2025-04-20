@@ -7,7 +7,6 @@ import 'package:graduation_project/core/themes/text_styles.dart';
 import 'package:graduation_project/features/doctor/profile/presentation/views/profile_view.dart' as doctor;
 import 'package:graduation_project/features/nurse/profile/presentation/views/profile_view.dart'as nurse;
 import 'package:graduation_project/features/patient/profile/presentation/views/profile_view.dart'as patient;
-import 'package:graduation_project/views/login/view.dart';
 
 
 
@@ -111,7 +110,6 @@ class _UserTypeBodyState extends State<UserTypeBody> {
                         ),
                       );
                     } else {
-                      // Navigate to the appropriate screen based on the selected user type
                       switch (selectedUserType) {
                         case 'Doctor':
                           RouteUtils.pushAndRemoveAll(context, doctor.ProfileView());

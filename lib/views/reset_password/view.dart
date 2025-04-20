@@ -1,6 +1,6 @@
 import 'package:graduation_project/core/utils/colors.dart';
 import 'package:graduation_project/core/utils/validator.dart';
-import 'package:graduation_project/features/patient/home/presentation/views/widgets/choose_row.dart';
+import 'package:graduation_project/core/shared_widgets/header_row.dart';
 import 'package:graduation_project/views/login/view.dart';
 import 'package:graduation_project/widgets/app_button.dart';
 import 'package:graduation_project/widgets/app_head_line.dart';
@@ -21,7 +21,7 @@ class CreatePasswordView extends StatelessWidget {
         child: ListView(
           padding: EdgeInsets.all(16),
           children: [
-            const ChooseRow(
+            const HeaderRow(
               text: 'Verify Your Email',
             ),
             SizedBox(height: 30),

@@ -1,5 +1,5 @@
 import 'package:graduation_project/core/utils/colors.dart';
-import 'package:graduation_project/features/patient/home/presentation/views/widgets/choose_row.dart';
+import 'package:graduation_project/core/shared_widgets/header_row.dart';
 import 'package:graduation_project/widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import '../../core/route_utils/route_utils.dart';
@@ -16,7 +16,7 @@ class VerifyYourEmailView extends StatelessWidget {
       body: ListView(
         padding: EdgeInsets.all(16),
         children: [
-          const ChooseRow(
+          const HeaderRow(
             text: 'Verify Your Email',
           ),
           SizedBox(height: 50),

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:graduation_project/core/themes/colors.dart';
 import 'package:graduation_project/core/themes/text_styles.dart';
-import 'package:graduation_project/features/patient/home/presentation/views/choose_governorate_view.dart';
-import 'package:graduation_project/features/patient/home/presentation/views/choose_specialty_view.dart';
+import 'package:graduation_project/features/patient/governorate/presentation/views/choose_governorate_view.dart';
+import 'package:graduation_project/features/patient/specialty/presentation/views/choose_specialty_view.dart';
 
 class ServicesRoW extends StatelessWidget {
   const ServicesRoW({super.key});
