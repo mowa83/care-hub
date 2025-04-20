@@ -10,6 +10,7 @@ import 'package:graduation_project/features/patient/profile/presentation/views/p
 
 
 
+
 class UserTypeBody extends StatefulWidget {
   const UserTypeBody({super.key});
 
@@ -110,6 +111,7 @@ class _UserTypeBodyState extends State<UserTypeBody> {
                         ),
                       );
                     } else {
+                      // Navigate to the appropriate screen based on the selected user type
                       switch (selectedUserType) {
                         case 'Doctor':
                           RouteUtils.pushAndRemoveAll(context, doctor.ProfileView());

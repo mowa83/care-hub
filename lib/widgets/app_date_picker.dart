@@ -6,11 +6,13 @@ class AppDatePicker extends StatefulWidget {
   final String hint;
   final String? Function(String? v)? validator;
   final bool secure;
+  final TextEditingController? controller;
   const AppDatePicker({
     super.key,
     required this.hint,
     this.validator,
     this.secure = false,
+    this.controller,
   });
 
   @override
@@ -18,11 +20,20 @@ class AppDatePicker extends StatefulWidget {
 }
 
 class _AppDatePicker2State extends State<AppDatePicker> {
-  TextEditingController dateController = TextEditingController();
+  late TextEditingController dateController;
 
   @override
   void initState() {
     super.initState();
+    dateController = widget.controller ?? TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    if (widget.controller == null) {
+      dateController.dispose();
+    }
+    super.dispose();
   }
 
   @override
@@ -46,10 +57,12 @@ class _AppDatePicker2State extends State<AppDatePicker> {
                       initialDate: DateTime.now(),
                       firstDate: DateTime(2010),
                       lastDate: DateTime(2025).add(Duration(days: 365)));
-                  final formattedate = DateFormat('dd-MM-yyyy').format(date!);
-                  setState(() {
-                    dateController.text = formattedate.toString();
-                  });
+                  if (date != null) {
+                    final formattedDate = DateFormat('dd-MM-yyyy').format(date);
+                    setState(() {
+                      dateController.text = formattedDate;
+                    });
+                  }
                 },
                 icon: Image(image: AssetImage('assets/images/calendar.png'))),
             hintStyle: TextStyle(

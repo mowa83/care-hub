@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graduation_project/core/shared_widgets/home_bottom_nav_bar.dart';
 import 'package:graduation_project/features/nurse/profile/presentation/views/profile_view.dart';
+import 'package:graduation_project/screens/nurse/chats/chats_nurse_screen.dart';
 
 
 class HomeView extends StatefulWidget {
@@ -13,7 +14,7 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   int selectedIndex = 0;
   final List<Widget> pages = [
-    const ProfileView(),
+    const ChatsNurseScreen(),
     const ProfileView(),
   ];
   @override

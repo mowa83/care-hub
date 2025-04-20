@@ -8,7 +8,7 @@ class AppButton extends StatelessWidget {
   const AppButton({
     super.key,
     required this.title,
-    this.onTap,
+    this.onTap, 
   });
 
   @override
