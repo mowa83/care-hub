@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:graduation_project/core/shared_widgets/custom_button.dart';
 import 'package:graduation_project/core/themes/colors.dart';
 import 'package:graduation_project/core/themes/text_styles.dart';
-import 'package:graduation_project/views/login/view.dart';
+import 'package:graduation_project/screens/patient/login/login_screen.dart';
 
 void showLogoutDialog({required BuildContext context}) {
   showDialog(
@@ -51,7 +51,7 @@ void showLogoutDialog({required BuildContext context}) {
                           Navigator.of(context).pop();
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
-                              builder: (context) => LoginView(),
+                              builder: (context) => LoginScreen(),
                             ),
                           );
                         },

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graduation_project/core/themes/text_styles.dart';
-import 'package:graduation_project/views/login/view.dart';
+import 'package:graduation_project/screens/patient/login/login_screen.dart';
 
 class SkipButton extends StatelessWidget {
   const SkipButton({super.key});
@@ -10,7 +10,7 @@ class SkipButton extends StatelessWidget {
     return TextButton(
       onPressed: () {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) =>  LoginView(),
+          builder: (context) =>  LoginScreen(),
         ));
       },
       style: const ButtonStyle(
