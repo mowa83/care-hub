@@ -37,7 +37,7 @@ class ChooseListView extends StatelessWidget {
               // ),
               // ),
               Text(
-                items[index].name,
+                items[index],
                 style: textStyle18(
                     fontSize: 16.sp,
                     height: 1.5,

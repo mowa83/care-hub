@@ -4,8 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:graduation_project/core/themes/text_styles.dart';
 
 class WelcomeBackRow extends StatelessWidget {
-  const WelcomeBackRow({super.key});
-
+  const WelcomeBackRow({super.key, required this.patientName});
+final String patientName;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -29,7 +29,7 @@ class WelcomeBackRow extends StatelessWidget {
                   'Welcome Back',
                   style: textStyle12(letterSpacing: .08),
                 ),
-                Text('Mr. Ahmed',
+                Text('Mr. $patientName',
                     style: textStyle12(
                       fontWeight: FontWeight.w500,
                       letterSpacing: .07,

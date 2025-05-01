@@ -9,6 +9,8 @@ class AppText extends StatelessWidget {
   final Color color;
   final TextDecoration? decoration;
   final void Function()? onTap;
+  final int? maxLines;
+  final TextOverflow? overflow;
   const AppText({
     super.key,
     required this.title,
@@ -16,7 +18,7 @@ class AppText extends StatelessWidget {
     this.fontSize = 14,
     this.color = AppColors.black,
     this.decoration,
-    this.onTap,
+    this.onTap, this.maxLines, this.overflow,
   });
 
   @override
@@ -31,6 +33,8 @@ class AppText extends StatelessWidget {
           color: color,
           decoration: decoration,
         ),
+       maxLines: maxLines,
+        overflow:overflow ,
       ),
     );
   }

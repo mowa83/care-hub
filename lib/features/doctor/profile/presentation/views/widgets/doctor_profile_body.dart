@@ -6,8 +6,8 @@ import 'package:graduation_project/core/shared_widgets/profile_header.dart';
 import 'package:graduation_project/core/shared_widgets/profile_image.dart';
 import 'package:graduation_project/core/shared_widgets/profile_text_field.dart';
 import 'package:graduation_project/core/shared_widgets/show_logout_dialog.dart';
-import 'package:graduation_project/features/doctor/profile/data/models/doctor_profile_model.dart';
-import 'package:graduation_project/features/doctor/profile/presentation/view%20model/doctor_profile_api_service.dart';
+import 'package:graduation_project/core/models/doctor_profile_model.dart';
+import 'package:graduation_project/core/services/doctor_profile_api_service.dart';
 import 'package:intl/intl.dart';
 
 class ProfileBody extends StatefulWidget {
@@ -39,7 +39,7 @@ class _ProfileBodyState extends State<ProfileBody> {
   @override
   void initState() {
     super.initState();
-    userFuture = ApiService().fetchProfileModel();
+    userFuture = ApiService().fetchProfileModel('/user/my_profile/');
     items = [
       {
         'icon': 'assets/icons/profile.svg',
@@ -261,7 +261,7 @@ class _ProfileBodyState extends State<ProfileBody> {
                             );
 
                             final success = await ApiService()
-                                .updateProfile(updatedProfile);
+                                .updateProfile(updatedProfile,'/edit_my_profile/');
                             if (!context.mounted) return;
                             if (success) {
                               ScaffoldMessenger.of(context).showSnackBar(

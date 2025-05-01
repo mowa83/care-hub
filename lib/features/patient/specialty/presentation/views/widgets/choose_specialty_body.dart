@@ -6,6 +6,8 @@ import 'package:graduation_project/features/patient/governorate/presentation/vie
 import 'package:graduation_project/core/shared_widgets/choose_list_view.dart';
 import 'package:graduation_project/core/shared_widgets/header_row.dart';
 
+import '../../../../../../core/constants/filters.dart';
+
 
 class ChooseSpecialtyBody extends StatelessWidget {
   const ChooseSpecialtyBody({super.key, required this.type});
@@ -13,17 +15,19 @@ class ChooseSpecialtyBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:FutureBuilder<List<Result>?>(
-        future: SpecialtyApiService().fetchSpecialties(),
-    builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-    return const Center(child: CircularProgressIndicator());
-    } else if (snapshot.hasError || snapshot.data == null) {
-    return const Center(child: Text("Failed to load specialties"));
-    }
-
-    final specialty = snapshot.data!;
-    return Column(
+      body:
+      //   FutureBuilder<List<Result>?>(
+    //     future: SpecialtyApiService().fetchSpecialties(),
+    // builder: (context, snapshot) {
+    // if (snapshot.connectionState == ConnectionState.waiting) {
+    // return const Center(child: CircularProgressIndicator());
+    // } else if (snapshot.hasError || snapshot.data == null) {
+    // return const Center(child: Text("Failed to load specialties"));
+    // }
+    //
+    // final specialty = snapshot.data!;
+    // return
+      Column(
         children: [
           const HeaderRow(
             text: 'Choose Specialty',
@@ -33,19 +37,21 @@ class ChooseSpecialtyBody extends StatelessWidget {
           ),
           Expanded(
             child: ChooseListView(
-              items: specialty,
+              items: specialties,
               // icons: specialty[index].icon,
               onItemTap: (index) {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => ChooseGovernorateView(
-                          specialty:specialty[index].id ,
+                          specialty:specialties[index],
                       type: type,
                         )));
               },
             ),
           )
         ],
-      );})
+      )
+    // ;
+        // })
     );
   }
 }

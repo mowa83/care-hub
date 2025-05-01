@@ -1,23 +1,23 @@
 import 'dart:convert';
 
-OffersModel offersModelFromJson(String str) => OffersModel.fromJson(json.decode(str));
+DoctorsModel doctorsModelFromJson(String str) => DoctorsModel.fromJson(json.decode(str));
 
-String offersModelToJson(OffersModel data) => json.encode(data.toJson());
+String doctorsModelToJson(DoctorsModel data) => json.encode(data.toJson());
 
-class OffersModel {
+class DoctorsModel {
   final int? count;
   final dynamic next;
   final dynamic previous;
   final List<Result>? results;
 
-  OffersModel({
+  DoctorsModel({
     this.count,
     this.next,
     this.previous,
     this.results,
   });
 
-  factory OffersModel.fromJson(Map<String, dynamic> json) => OffersModel(
+  factory DoctorsModel.fromJson(Map<String, dynamic> json) => DoctorsModel(
     count: json["count"],
     next: json["next"],
     previous: json["previous"],
@@ -33,6 +33,7 @@ class OffersModel {
 }
 
 class Result {
+  final int? id;
   final User? user;
   final int? price;
   final Specialty? specialty;
@@ -41,6 +42,7 @@ class Result {
   final String? about;
 
   Result({
+    this.id,
     this.user,
     this.price,
     this.specialty,
@@ -50,6 +52,7 @@ class Result {
   });
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
+    id: json["id"],
     user: json["user"] == null ? null : User.fromJson(json["user"]),
     price: json["price"],
     specialty: json["specialty"] == null ? null : Specialty.fromJson(json["specialty"]),
@@ -59,6 +62,7 @@ class Result {
   );
 
   Map<String, dynamic> toJson() => {
+    "id": id,
     "user": user?.toJson(),
     "price": price,
     "specialty": specialty?.toJson(),
@@ -70,45 +74,25 @@ class Result {
 
 class City {
   final int? id;
-  final Governorate? governorate;
   final String? name;
+  final int? governorate;
 
   City({
     this.id,
-    this.governorate,
     this.name,
+    this.governorate,
   });
 
   factory City.fromJson(Map<String, dynamic> json) => City(
     id: json["id"],
-    governorate: json["governorate"] == null ? null : Governorate.fromJson(json["governorate"]),
     name: json["name"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "id": id,
-    "governorate": governorate?.toJson(),
-    "name": name,
-  };
-}
-
-class Governorate {
-  final int? id;
-  final String? name;
-
-  Governorate({
-    this.id,
-    this.name,
-  });
-
-  factory Governorate.fromJson(Map<String, dynamic> json) => Governorate(
-    id: json["id"],
-    name: json["name"],
+    governorate: json["governorate"],
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
     "name": name,
+    "governorate": governorate,
   };
 }
 
