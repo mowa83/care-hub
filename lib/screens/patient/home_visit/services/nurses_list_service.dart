@@ -1,8 +1,6 @@
 import 'dart:convert';
-
 import 'package:graduation_project/core/constants/config.dart';
 import 'package:http/http.dart' as http;
-
 import 'nurses_list_model.dart';
 class NursesListService {
   Future<List<Result>?> fetchNurses(String url) async {

@@ -17,7 +17,7 @@ class HospitalService {
         return data.map((json) => HospitalModel.fromJson(json)).toList();
       } else {
         print("Error: ${response.statusCode}");
-        return null;
+        return [];
       }
     } catch (e) {
       print("Exception: $e");

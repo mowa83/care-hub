@@ -14,9 +14,10 @@ class HospitalsListService {
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
         return data.map((json) => HospitalsListModel.fromJson(json)).toList();
+
       } else {
         print("Error: ${response.statusCode}");
-        return null;
+        return [];
       }
     } catch (e) {
       print("Exception: $e");
