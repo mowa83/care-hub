@@ -70,7 +70,7 @@ class Result {
 
 class City {
   final int? id;
-  final Governorate? governorate;
+  final int? governorate;
   final String? name;
 
   City({
@@ -81,33 +81,14 @@ class City {
 
   factory City.fromJson(Map<String, dynamic> json) => City(
     id: json["id"],
-    governorate: json["governorate"] == null ? null : Governorate.fromJson(json["governorate"]),
+    governorate: json["governorate"],
     name: json["name"],
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
-    "governorate": governorate?.toJson(),
+    "governorate": governorate,
     "name": name,
   };
 }
 
-class Governorate {
-  final int? id;
-  final String? name;
-
-  Governorate({
-    this.id,
-    this.name,
-  });
-
-  factory Governorate.fromJson(Map<String, dynamic> json) => Governorate(
-    id: json["id"],
-    name: json["name"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-  };
-}
