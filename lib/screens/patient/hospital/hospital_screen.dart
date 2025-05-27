@@ -52,7 +52,17 @@ class _HospitalScreenState extends State<HospitalScreen> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child:
-                      Image(image: AssetImage('assets/images/Frame 1261154967.png')),
+                   hospital[0].hospital?.image != null && hospital[0].hospital?.image.isNotEmpty
+                      ? Image.network(
+                     hospital[0].hospital?.image,
+                    width: 90.w,
+                    height: 90.h,
+                    fit:BoxFit.cover ,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Icon(Icons.error);
+                    },
+                  )
+                      : Icon(Icons.error),
                 ),
                 SizedBox(height: 12),
                 AppText(
