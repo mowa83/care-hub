@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:graduation_project/core/shared_widgets/custom_button.dart';
+import 'package:graduation_project/core/shared_widgets/profile_image.dart';
 import 'package:graduation_project/core/shared_widgets/show_logout_dialog.dart';
 import 'package:graduation_project/core/themes/text_styles.dart';
 import 'package:graduation_project/features/patient/profile/data/models/patient_profile_model.dart';
@@ -77,9 +78,12 @@ class _ProfileBodyState extends State<ProfileBody> {
                     SizedBox(
                       height: 16.h,
                     ),
-                    SvgPicture.asset(
-                      'assets/icons/profile-circle.svg',
-                      width: 116.w,
+                    // SvgPicture.asset(
+                    //   'assets/icons/profile-circle.svg',
+                    //   width: 116.w,
+                    // ),
+                    ProfileImage(
+                      profileImageUrl: profile.user!.image,
                     ),
                     ListView.separated(
                       itemBuilder: (context, index) {
