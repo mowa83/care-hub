@@ -36,8 +36,8 @@ class Result {
   final int? id;
   final User? user;
   final int? price;
-  final Specialty? specialty;
-  final City? city;
+  final String? specialty;
+  final String? city;
   final int? offer;
   final String? about;
 
@@ -55,8 +55,8 @@ class Result {
     id: json["id"],
     user: json["user"] == null ? null : User.fromJson(json["user"]),
     price: json["price"],
-    specialty: json["specialty"] == null ? null : Specialty.fromJson(json["specialty"]),
-    city: json["city"] == null ? null : City.fromJson(json["city"]),
+    specialty: json["specialty"],
+    city: json["city"] ,
     offer: json["offer"],
     about: json["about"],
   );
@@ -65,60 +65,13 @@ class Result {
     "id": id,
     "user": user?.toJson(),
     "price": price,
-    "specialty": specialty?.toJson(),
-    "city": city?.toJson(),
+    "specialty": specialty,
+    "city": city,
     "offer": offer,
     "about": about,
   };
 }
 
-class City {
-  final int? id;
-  final String? name;
-  final int? governorate;
-
-  City({
-    this.id,
-    this.name,
-    this.governorate,
-  });
-
-  factory City.fromJson(Map<String, dynamic> json) => City(
-    id: json["id"],
-    name: json["name"],
-    governorate: json["governorate"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "governorate": governorate,
-  };
-}
-
-class Specialty {
-  final int? id;
-  final String? name;
-  final String? icon;
-
-  Specialty({
-    this.id,
-    this.name,
-    this.icon,
-  });
-
-  factory Specialty.fromJson(Map<String, dynamic> json) => Specialty(
-    id: json["id"],
-    name: json["name"],
-    icon: json["icon"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "icon": icon,
-  };
-}
 
 class User {
   final String? username;

@@ -49,7 +49,7 @@ class _AllOffersBodyState extends State<AllOffersBody> {
                         if (offer[index].offer!=null) {
                           return DoctorsOffers(
                             doctorName: offer[index].user?.username ?? '',
-                            doctorSpecialty: offer[index].specialty?.name ?? '',
+                            doctorSpecialty: offer[index].specialty??'',
                             price: offer[index].price ?? 0,
                             offer: offer[index].offer!,
                             doctorId: offer[index].id!,

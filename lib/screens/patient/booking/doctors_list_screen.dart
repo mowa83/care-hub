@@ -60,12 +60,12 @@ class _DoctorsListScreenState extends State<DoctorsListScreen> {
 
                           return AppDoctorCard(
                             label: doctors[index].user?.username ?? '',
-                            description: doctors[index].specialty?.name ?? '',
+                            description: doctors[index].specialty?? '',
                             photo: doctors[index].user?.image ??'',
                             price: doctors[index].price ?? 0,
                             offer: doctors[index].offer,
                             doctorId: doctors[index].id!,
-                            specialty: doctors[index].specialty?.name??'',
+                            specialty: doctors[index].specialty??'',
                           );
                       },
                       separatorBuilder: (context, index) {

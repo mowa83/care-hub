@@ -96,7 +96,7 @@ class _HomeBodyState extends State<HomeBody> {
                                 return DoctorsOffers(
                                   doctorName: topOffers[index].user?.username ?? '',
                                   doctorSpecialty:
-                                  topOffers[index].specialty?.name ?? '',
+                                  topOffers[index].specialty ?? '',
                                   price: topOffers[index].price ?? 0,
                                   offer: topOffers[index].offer??0,
                                   doctorId: topOffers[index].id!,

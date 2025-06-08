@@ -38,7 +38,7 @@ class Result {
   final int? id;
   final String? about;
   final String? image;
-  final City? city;
+  final String? city;
 
   Result({
     this.user,
@@ -55,7 +55,7 @@ class Result {
     id: json["id"],
     about: json["about"],
     image: json["image"],
-    city: json["city"] == null ? null : City.fromJson(json["city"]),
+    city: json["city"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -64,31 +64,7 @@ class Result {
     "id": id,
     "about": about,
     "image": image,
-    "city": city?.toJson(),
-  };
-}
-
-class City {
-  final int? id;
-  final int? governorate;
-  final String? name;
-
-  City({
-    this.id,
-    this.governorate,
-    this.name,
-  });
-
-  factory City.fromJson(Map<String, dynamic> json) => City(
-    id: json["id"],
-    governorate: json["governorate"],
-    name: json["name"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "id": id,
-    "governorate": governorate,
-    "name": name,
+    "city": city,
   };
 }
 
