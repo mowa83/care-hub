@@ -8,6 +8,7 @@ import 'package:graduation_project/features/patient/splash/presentation/views/wi
 import 'package:graduation_project/features/patient/splash/presentation/views/widgets/grey_text.dart';
 import 'package:graduation_project/features/patient/splash/presentation/views/widgets/short_next_button.dart';
 import 'package:graduation_project/features/patient/splash/presentation/views/widgets/skip_button.dart';
+import 'package:graduation_project/screens/login/login_screen.dart';
 class Splash3Body extends StatelessWidget {
   const Splash3Body({super.key});
 
@@ -84,9 +85,9 @@ class Splash3Body extends StatelessWidget {
                   SizedBox(
                     width: 327.w,
                     // height: 54,
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [SkipButton(), ShortNextButton(nextScreen: UserTypeView(),)],
+                      children: const [SkipButton(), ShortNextButton(nextScreen: LoginScreen(),)],
                     ),
                   )
                 ],

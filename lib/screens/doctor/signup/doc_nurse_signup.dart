@@ -1,27 +1,92 @@
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:graduation_project/core/constants/filters.dart';
 import 'package:graduation_project/core/route_utils/route_utils.dart';
-import 'package:graduation_project/screens/patient/login/verify_signup_screen.dart';
+import 'package:graduation_project/screens/doctor/signup/services/signup_doctor_model.dart';
+import 'package:graduation_project/screens/doctor/signup/services/signup_doctor_service.dart';
+import 'package:graduation_project/screens/patient/signup/verify_signup_screen.dart';
 import 'package:graduation_project/widgets/app_button.dart';
 import 'package:graduation_project/widgets/app_drop_list.dart';
 import 'package:graduation_project/widgets/app_head_line.dart';
 import 'package:graduation_project/widgets/app_image_picker.dart';
 import 'package:graduation_project/widgets/app_text.dart';
 
+
 class DocNurseSignup extends StatefulWidget {
-  const DocNurseSignup({super.key});
+  final Map<String, dynamic> formData;
+  final String userType;
+
+  const DocNurseSignup({
+    super.key,
+    required this.formData,
+    required this.userType,
+  });
 
   @override
   State<DocNurseSignup> createState() => _DocNurseSignupState();
 }
 
 class _DocNurseSignupState extends State<DocNurseSignup> {
-  File? selectedImage;
   final formKey = GlobalKey<FormState>();
-  void onImageSelected(File? image) {
-    setState(() {
-      selectedImage = image;
-    });
+  final Dio _dio = Dio();
+  late final DoctorNurseSignupService _signupService;
+
+  File? selectedImage;
+  File? selectedCard;
+  String? selectedGovernorate;
+  String? selectedCity;
+  String? selectedSpecialty;
+
+  @override
+  void initState() {
+    super.initState();
+    _signupService = DoctorNurseSignupService(_dio);
+  }
+
+  Future<void> submitSignup() async {
+    if (!formKey.currentState!.validate()) return;
+
+    if (selectedImage == null || selectedCard == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select your photo and card.')),
+      );
+      return;
+    }
+    if (selectedGovernorate == null || selectedCity == null || selectedSpecialty == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select governorate, city, and specialty.')),
+      );
+      return;
+    }
+
+    final signupData = DoctorNurseSignupModel(
+      username: widget.formData["fullName"],
+      email: widget.formData["email"],
+      password: widget.formData["password"],
+      confirmPassword: widget.formData["password"],
+      userType: widget.userType,
+      gender: widget.formData["gender"],
+      phoneNumber: widget.formData["phone"],
+      birthDate: widget.formData["birthDate"],
+      image: selectedImage!,
+      card: selectedCard!,
+      governorate: selectedGovernorate!,
+      city: selectedCity!,
+      specialty: selectedSpecialty!,
+    );
+
+    try {
+      await _signupService.signupDoctorNurse(signupData);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Signup successful!')),
+      );
+      RouteUtils.push(context, const VerifySignupScreen());
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    }
   }
 
   @override
@@ -30,83 +95,65 @@ class _DocNurseSignupState extends State<DocNurseSignup> {
       key: formKey,
       child: Scaffold(
         body: ListView(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           children: [
-            SizedBox(
-              height: 50,
-            ),
-            Center(
+            const SizedBox(height: 50),
+            const Center(
               child: AppText(
                 title: 'Create Account',
                 fontWeight: FontWeight.w500,
                 fontSize: 25,
               ),
             ),
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
             AppHeadLine(photo: 'gallery', labal: 'Your Photo'),
-            SizedBox(
-              height: 10,
+            const SizedBox(height: 10),
+            AppImagePicker(
+              onImageSelected: (file) => setState(() => selectedImage = file),
             ),
-            AppImagePicker(onImageSelected: onImageSelected),
-            SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
             AppHeadLine(photo: 'gallery', labal: 'Your Card'),
-            SizedBox(
-              height: 10,
+            const SizedBox(height: 10),
+            AppImagePicker(
+              onImageSelected: (file) => setState(() => selectedCard = file),
             ),
-            AppImagePicker(onImageSelected: onImageSelected),
-            SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
             AppHeadLine(photo: 'location', labal: 'Location'),
-            SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Expanded(
                   child: AppDropList(
-                    items: const ['cairo', 'banha', 'alexandria', 'giza'],
-                    hintText: 'Government',
-                    onChanged: (value) => print('Government: $value'),
+                    items: governorates,
+                    hintText: 'Governorate',
+                    onChanged: (value) => setState(() {
+                      selectedGovernorate = value;
+                      selectedCity = null;
+                    }),
                   ),
                 ),
                 const SizedBox(width: 25),
                 Expanded(
                   child: AppDropList(
-                    items: const ['mansoura', 'mahala', 'nasr', 'tanta'],
+                    items: selectedGovernorate != null ? cities[selectedGovernorate!] ?? [] : [],
                     hintText: 'City',
-                    onChanged: (value) => print('City: $value'),
+                    onChanged: (value) => setState(() => selectedCity = value),
                   ),
                 ),
               ],
             ),
-            SizedBox(
-              height: 20,
-            ),
-            AppHeadLine(photo: 'money', labal: 'specialty'),
-            SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 20),
+            AppHeadLine(photo: 'money', labal: 'Specialty'),
+            const SizedBox(height: 10),
             AppDropList(
-              items: const [
-                'Dental',
-                'Dermatology',
-                'Psychiatry',
-                'Dental',
-                'Psychiatry',
-              ],
-              hintText: 'Choose Your specialty',
-              onChanged: (value) => print('City: $value'),
+              items: specialties,
+              hintText: 'Choose Your Specialty',
+              onChanged: (value) => setState(() => selectedSpecialty = value),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             AppButton(
               title: 'Send',
-              onTap: () {
-                RouteUtils.push(context, VerifySignupScreen());
-              },
+              onTap: submitSignup,
             ),
           ],
         ),

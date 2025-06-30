@@ -1,5 +1,4 @@
 class Validator {
-
   static String? fullName(String? value) {
     if (value == null || value.isEmpty) {
       return 'Empty Full Name!';
@@ -8,10 +7,11 @@ class Validator {
     }
     return null;
   }
-    static String? date (String? value) {
+
+  static String? date(String? value) {
     if (value == null || value.isEmpty) {
       return 'Empty Birth Of Date';
-    } 
+    }
     return null;
   }
 
@@ -38,6 +38,16 @@ class Validator {
       return 'Empty Password!';
     } else if (value.length < 8) {
       return 'Invalid Password length!';
+    }
+    return null;
+  }
+
+  static String? confirmPassword(String? value, String password) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Please confirm your password';
+    }
+    if (value != password) {
+      return 'Passwords do not match';
     }
     return null;
   }

@@ -2,41 +2,70 @@ import 'package:flutter/material.dart';
 import 'package:graduation_project/core/route_utils/route_utils.dart';
 import 'package:graduation_project/core/shared_widgets/header_row.dart';
 import 'package:graduation_project/core/utils/colors.dart';
-import 'package:graduation_project/screens/patient/booking/appointments_screen.dart';
+import 'package:graduation_project/features/patient/home/presentation/views/home_view.dart';
+import 'package:graduation_project/screens/patient/booking/services/booking/booking_models.dart';
+import 'package:graduation_project/screens/patient/booking/services/booking/booking_services.dart';
 import 'package:graduation_project/widgets/app_text.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:intl/intl.dart';
 
 class BookingScreen extends StatefulWidget {
-  const BookingScreen({super.key});
+  const BookingScreen({super.key, required this.doctorId});
+
+  final int doctorId;
 
   @override
   _BookingScreenState createState() => _BookingScreenState();
 }
 
 class _BookingScreenState extends State<BookingScreen> {
-  DateTime _focusedDay = DateTime(2025, 2, 1);
+  DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   String? _selectedTime;
-
-  final List<String> _timeSlots = [
-    '09:00 AM',
-    '09:30 AM',
-    '10:00 AM',
-    '10:30 AM',
-    '11:00 AM',
-    '11:30 AM',
-    '15:00 PM',
-    '15:30 PM',
-    '16:00 PM',
-    '16:30 PM',
-    '17:00 PM',
-    '17:30 PM',
-  ];
+  late Future<List<AvailableSlotModel>> _availableSlotsFuture;
+  List<AvailableSlotModel> _availableSlots = [];
 
   @override
   void initState() {
     super.initState();
-    _selectedDay = DateTime(2021, 2, 17);
+    _selectedDay = DateTime.now();
+    _availableSlotsFuture = _fetchInitialSlots();
+  }
+
+  Future<List<AvailableSlotModel>> _fetchInitialSlots() async {
+    final slots = await BookingService().fetchAvailableSlots(widget.doctorId, DateTime.now());
+    setState(() {
+      _availableSlots = slots; 
+    });
+    return slots;
+  }
+
+  void _fetchAvailableSlots() {
+    setState(() {
+      _availableSlotsFuture = BookingService()
+          .fetchAvailableSlots(widget.doctorId, _selectedDay ?? DateTime.now())
+          .then((slots) {
+        setState(() {
+          _availableSlots = slots; 
+        });
+        return slots;
+      });
+    });
+  }
+
+  List<String> _getAvailableTimesForSelectedDay() {
+    if (_selectedDay == null) return [];
+    final selectedDateStr = DateFormat('yyyy-MM-dd').format(_selectedDay!);
+    return _availableSlots
+        .where((slot) => slot.date == selectedDateStr)
+        .map((slot) =>
+            DateFormat('hh:mm a').format(DateTime.parse('2025-01-01 ${slot.time}')))
+        .toList();
+  }
+
+  bool _hasAvailableSlots(DateTime day) {
+    final dateStr = DateFormat('yyyy-MM-dd').format(day);
+    return _availableSlots.any((slot) => slot.date == dateStr);
   }
 
   @override
@@ -48,11 +77,9 @@ class _BookingScreenState extends State<BookingScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const HeaderRow(
-              text: 'Nurse Details',
+              text: 'Book Appointement',
             ),
-            SizedBox(
-              height: 20,
-            ),
+            SizedBox(height: 20),
             AppText(
               title: 'Select Date',
               fontSize: 20,
@@ -65,7 +92,7 @@ class _BookingScreenState extends State<BookingScreen> {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: TableCalendar(
-                firstDay: DateTime(2025, 1, 1),
+                firstDay: DateTime.now(),
                 lastDay: DateTime(2025, 12, 31),
                 focusedDay: _focusedDay,
                 selectedDayPredicate: (day) {
@@ -75,8 +102,30 @@ class _BookingScreenState extends State<BookingScreen> {
                   setState(() {
                     _selectedDay = selectedDay;
                     _focusedDay = focusedDay;
+                    _selectedTime = null; 
+                    _fetchAvailableSlots();
                   });
                 },
+                calendarBuilders: CalendarBuilders(
+                  defaultBuilder: (context, day, focusedDay) {
+                    if (_hasAvailableSlots(day) && !isSameDay(day, _selectedDay)) {
+                      return Container(
+                        margin: const EdgeInsets.all(4.0),
+                        decoration: const BoxDecoration(
+                          color: Color.fromARGB(255, 217,217,217),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Text(
+                            '${day.day}',
+                            style: const TextStyle(color: Colors.black),
+                          ),
+                        ),
+                      );
+                    }
+                    return null; 
+                  },
+                ),
                 calendarStyle: const CalendarStyle(
                   todayDecoration: BoxDecoration(
                     color: Colors.grey,
@@ -101,47 +150,61 @@ class _BookingScreenState extends State<BookingScreen> {
             ),
             const SizedBox(height: 24),
             AppText(
-              title: 'Select Date',
+              title: 'Select Time',
               fontSize: 20,
               fontWeight: FontWeight.w500,
             ),
             const SizedBox(height: 8),
             Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 8,
-                  childAspectRatio: 3,
-                ),
-                itemCount: _timeSlots.length,
-                itemBuilder: (context, index) {
-                  final time = _timeSlots[index];
-                  final isSelected = _selectedTime == time;
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _selectedTime = time;
-                      });
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: const Color(0xFF26A69A)),
-                        borderRadius: BorderRadius.circular(20),
-                        color: isSelected ? AppColors.primary : AppColors.white,
-                      ),
-                      child: Center(
-                        child: Text(
-                          time,
-                          style: TextStyle(
-                            color: isSelected
-                                ? AppColors.white
-                                : AppColors.primary,
-                            fontSize: 14,
+              child: FutureBuilder<List<AvailableSlotModel>>(
+                future: _availableSlotsFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError || snapshot.data == null) {
+                    return const Center(child: Text('Failed to load time slots'));
+                  }
+                  final availableTimes = _getAvailableTimesForSelectedDay();
+                  if (availableTimes.isEmpty) {
+                    return const Center(child: Text('No available time slots'));
+                  }
+                  return GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 8,
+                      mainAxisSpacing: 8,
+                      childAspectRatio: 3,
+                    ),
+                    itemCount: availableTimes.length,
+                    itemBuilder: (context, index) {
+                      final time = availableTimes[index];
+                      final isSelected = _selectedTime == time;
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedTime = time;
+                          });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: const Color(0xFF26A69A)),
+                            borderRadius: BorderRadius.circular(20),
+                            color: isSelected ? AppColors.primary : AppColors.white,
+                          ),
+                          child: Center(
+                            child: Text(
+                              time,
+                              style: TextStyle(
+                                color: isSelected
+                                    ? AppColors.white
+                                    : AppColors.primary,
+                                fontSize: 14,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   );
                 },
               ),
@@ -150,15 +213,34 @@ class _BookingScreenState extends State<BookingScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_selectedDay != null && _selectedTime != null) {
-                    RouteUtils.push(context, AppointementsScreen());
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'Appointment booked for ${_selectedDay!.day}/${_selectedDay!.month}/${_selectedDay!.year} at $_selectedTime',
+                    try {
+                      final dateStr = DateFormat('yyyy-MM-dd').format(_selectedDay!);
+                      final timeStr = DateFormat('HH:mm:ss').format(
+                          DateFormat('hh:mm a').parse(_selectedTime!));
+                      final appointment = BookAppointmentModel(
+                        doctor: widget.doctorId,
+                        date: dateStr,
+                        time: timeStr,
+                      );
+                      await BookingService().bookAppointment(appointment);
+                      RouteUtils.push(context, HomeView());
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Appointment booked for ${DateFormat('dd/MM/yyyy').format(_selectedDay!)} at $_selectedTime',
+                          ),
                         ),
-                      ),
+                      );
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Failed to book appointment: $e')),
+                      );
+                    }
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Please select date and time')),
                     );
                   }
                 },

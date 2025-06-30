@@ -108,7 +108,7 @@ class _HospitalScreenState extends State<HospitalScreen> {
                             return Divider(
                                 color: Colors.grey[300],
                                 thickness: 1,
-                                height: 20);
+                                height: 12);
                           },
                           itemCount: hospital.length,
                           padding: EdgeInsets.only(bottom: 16.h),

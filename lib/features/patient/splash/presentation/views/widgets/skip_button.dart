@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graduation_project/core/themes/text_styles.dart';
-import 'package:graduation_project/screens/patient/login/login_screen.dart';
+import 'package:graduation_project/screens/login/login_screen.dart';
 
 class SkipButton extends StatelessWidget {
   const SkipButton({super.key});

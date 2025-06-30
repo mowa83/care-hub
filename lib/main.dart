@@ -1,15 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:graduation_project/features/patient/home/presentation/views/widgets/home_body.dart';
 // import 'package:graduation_project/features/doctor/home/presentation/views/home_view.dart';
 // import 'package:graduation_project/features/nurse/home/presentation/views/home_view.dart';
 import 'package:graduation_project/features/patient/home/presentation/views/home_view.dart';
+import 'package:graduation_project/features/patient/splash/presentation/views/splash1_view.dart';
+import 'package:graduation_project/screens/doctor/booking/appointments_doctor_screen.dart';
+import 'package:graduation_project/screens/doctor/booking/set_appointment_screen.dart';
+import 'package:graduation_project/screens/patient/booking/appointments_edit_screen.dart';
+import 'package:graduation_project/screens/patient/booking/appointments_screen.dart';
+import 'package:graduation_project/screens/patient/booking/booking_screen.dart';
+import 'package:graduation_project/screens/patient/booking/doctor_screen.dart';
+import 'package:graduation_project/screens/chat/chats_screen.dart';
+import 'package:graduation_project/screens/patient/home_visit/nurse_screen.dart';
+import 'package:graduation_project/screens/patient/home_visit/nurses_list_screen.dart';
+import 'package:graduation_project/screens/login/login_screen.dart';
 // import 'package:graduation_project/features/patient/splash/presentation/views/splash1_view.dart';
 
 
 void main() {
   runApp(
     ScreenUtilInit(
-      designSize: const Size(375, 812), // Design screen size (width, height)
+      designSize: const Size(375, 812), 
       minTextAdapt: true,
       builder: (context, child) {
         return const MyApp();
@@ -21,7 +33,7 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -33,7 +45,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
       ),
-      home:HomeView(),
+      home:LoginScreen()
     );
   }
 }

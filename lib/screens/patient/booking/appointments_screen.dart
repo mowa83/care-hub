@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:graduation_project/core/route_utils/route_utils.dart';
 import 'package:graduation_project/core/utils/colors.dart';
 import 'package:graduation_project/screens/patient/booking/appointments_edit_screen.dart';
+import 'package:graduation_project/screens/patient/booking/services/appointment/appointment_model.dart';
+import 'package:graduation_project/screens/patient/booking/services/appointment/appointment_services.dart';
 import 'package:graduation_project/widgets/app_text.dart';
+import 'package:intl/intl.dart';
 
 class AppointementsScreen extends StatefulWidget {
   const AppointementsScreen({super.key});
@@ -14,81 +17,16 @@ class AppointementsScreen extends StatefulWidget {
 class _AppointementsScreenState extends State<AppointementsScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-
-  final List<Map<String, dynamic>> _pastAppointments = [
-    {
-      'date': '2 Oct, 2023',
-      'day': 'Today',
-      'appointments': [
-        {
-          'doctor': 'Dr. Ahmed Yasser',
-          'time': '9:00 - 10:00 AM',
-          'status': 'Done'
-        },
-        {
-          'doctor': 'Dr. Ahmed Yasser',
-          'time': '9:00 - 10:00 AM',
-          'status': 'Done'
-        },
-      ],
-    },
-    {
-      'date': '3 Oct, 2023',
-      'day': 'Tomorrow',
-      'appointments': [
-        {
-          'doctor': 'Dr. Ahmed Yasser',
-          'time': '9:00 - 10:00 AM',
-          'status': 'Done'
-        },
-        {
-          'doctor': 'Dr. Ahmed Yasser',
-          'time': '9:00 - 10:00 AM',
-          'status': 'Done'
-        },
-      ],
-    },
-  ];
-
-  final List<Map<String, dynamic>> _upcomingAppointments = [
-    {
-      'date': '2 Oct, 2023',
-      'day': 'Today',
-      'appointments': [
-        {
-          'doctor': 'Dr. Ahmed Yasser',
-          'time': '9:00 - 10:00 AM',
-          'status': 'Edit'
-        },
-        {
-          'doctor': 'Dr. Ahmed Yasser',
-          'time': '9:00 - 10:00 AM',
-          'status': 'Edit'
-        },
-      ],
-    },
-    {
-      'date': '3 Oct, 2023',
-      'day': 'Tomorrow',
-      'appointments': [
-        {
-          'doctor': 'Dr. Ahmed Yasser',
-          'time': '9:00 - 10:00 AM',
-          'status': 'Edit'
-        },
-        {
-          'doctor': 'Dr. Ahmed Yasser',
-          'time': '9:00 - 10:00 AM',
-          'status': 'Edit'
-        },
-      ],
-    },
-  ];
+  late Future<List<AppointmentModel>> _pastAppointmentsFuture;
+  late Future<List<AppointmentModel>> _upcomingAppointmentsFuture;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _pastAppointmentsFuture = AppointmentService().fetchPastAppointments();
+    _upcomingAppointmentsFuture =
+        AppointmentService().fetchUpcomingAppointments();
   }
 
   @override
@@ -97,56 +35,123 @@ class _AppointementsScreenState extends State<AppointementsScreen>
     super.dispose();
   }
 
+  List<Map<String, dynamic>> _groupAppointments(
+      List<AppointmentModel> appointments, bool isPast) {
+    final Map<String, List<AppointmentModel>> grouped = {};
+    final now = DateTime.now();
+    final dateFormatter =
+        DateFormat('d MMM, yyyy', 'en_US'); 
+
+    for (var appointment in appointments) {
+      final dateStr = appointment.date ?? '';
+      if (dateStr.isEmpty) continue;
+
+      try {
+        final appointmentDate = DateTime.parse(dateStr);
+        final formattedDate = dateFormatter.format(appointmentDate);
+        _getDayLabel(appointmentDate, now);
+
+        grouped.putIfAbsent(formattedDate, () => []).add(appointment);
+      } catch (e) {
+        debugPrint('Error parsing date $dateStr: $e');
+        continue;
+      }
+    }
+
+    return grouped.entries.map((entry) {
+      DateTime? entryDate;
+      try {
+        entryDate = dateFormatter.parse(entry.key);
+      } catch (e) {
+        debugPrint('Error parsing grouped date ${entry.key}: $e');
+        entryDate = DateTime.now();
+      }
+
+      return {
+        'date': entry.key,
+        'day': _getDayLabel(entryDate, now),
+        'originalDate': entryDate, 
+        'appointments': entry.value.map((appointment) {
+          final time = appointment.time ?? '';
+          String formattedTime = '';
+          try {
+            final parsedTime = DateFormat('HH:mm:ss').parse(time);
+            formattedTime = DateFormat('h:mm a').format(parsedTime);
+          } catch (e) {
+            debugPrint('Error parsing time $time: $e');
+            formattedTime = time;
+          }
+          return {
+            'id': appointment.id, 
+            'doctor': appointment.doctor?.doctorName ?? 'Unknown',
+            'doctorId': appointment.doctor?.id, 
+            'time': formattedTime,
+            'status': isPast ? 'Done' : 'Edit',
+            'specialty': appointment.doctor?.specialty ?? 'Unknown',
+            'image': appointment.doctor?.image,
+          };
+        }).toList(),
+      };
+    }).toList()
+      ..sort((a, b) => (a['originalDate'] as DateTime)
+          .compareTo(b['originalDate'] as DateTime));
+  }
+
+  String _getDayLabel(DateTime appointmentDate, DateTime now) {
+    final today = DateTime(now.year, now.month, now.day);
+    final appointmentDay = DateTime(
+        appointmentDate.year, appointmentDate.month, appointmentDate.day);
+    final difference = appointmentDay.difference(today).inDays;
+
+    if (difference == 0) return 'Today';
+    if (difference == 1) return 'Tomorrow';
+    if (difference == -1) return 'Yesterday';
+    return DateFormat('EEEE').format(appointmentDate);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
+    return SafeArea(
+      child: Scaffold(
+        body:  Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Row(
-                children: [
-                  Image(image: AssetImage('assets/images/profile-circle.png')),
-                  SizedBox(width: 8),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AppText(
-                        title: 'Welcome Back',
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      AppText(
-                        title: 'Mr. Ahmed',
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
               const SizedBox(height: 16),
+              Center(
+                child: AppText(
+                  title: 'My Appointments',
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 36),
               Container(
+                height: 48,
+                padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE0F7FA),
+                  color: Color.fromARGB(255, 228, 250, 248),
                   borderRadius: BorderRadius.circular(32),
                 ),
                 child: TabBar(
-                  splashBorderRadius: BorderRadius.circular(100),
-                  indicatorSize: TabBarIndicatorSize.tab,
                   controller: _tabController,
-                  labelColor: AppColors.white,
-                  unselectedLabelColor: AppColors.primary,
                   indicator: BoxDecoration(
                     color: AppColors.primary,
-                    borderRadius: BorderRadius.all(Radius.circular(100)),
+                    borderRadius: BorderRadius.circular(22),
                   ),
+                  labelColor: Colors.white,
+                  unselectedLabelColor: AppColors.primary,
+                  labelStyle: const TextStyle(fontWeight: FontWeight.w500),
+                  unselectedLabelStyle:
+                      const TextStyle(fontWeight: FontWeight.w500),
+                  dividerColor: Colors.transparent,
                   tabs: const [
                     Tab(text: 'Past'),
                     Tab(text: 'Upcoming'),
                   ],
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  splashBorderRadius: BorderRadius.circular(28),
                 ),
               ),
               const SizedBox(height: 16),
@@ -154,8 +159,39 @@ class _AppointementsScreenState extends State<AppointementsScreen>
                 child: TabBarView(
                   controller: _tabController,
                   children: [
-                    _buildAppointmentList(_pastAppointments),
-                    _buildAppointmentList(_upcomingAppointments),
+                    FutureBuilder<List<AppointmentModel>>(
+                      future: _pastAppointmentsFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        } else if (snapshot.hasError || snapshot.data == null) {
+                          return const Center(
+                              child: Text('Failed to load past appointments'));
+                        }
+                        final appointments =
+                            _groupAppointments(snapshot.data!, true);
+                        return _buildAppointmentList(appointments);
+                      },
+                    ),
+                    FutureBuilder<List<AppointmentModel>>(
+                      future: _upcomingAppointmentsFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        } else if (snapshot.hasError || snapshot.data == null) {
+                          return const Center(
+                              child:
+                                  Text('Failed to load upcoming appointments'));
+                        }
+                        final appointments =
+                            _groupAppointments(snapshot.data!, false);
+                        return _buildAppointmentList(appointments);
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -167,6 +203,9 @@ class _AppointementsScreenState extends State<AppointementsScreen>
   }
 
   Widget _buildAppointmentList(List<Map<String, dynamic>> appointments) {
+    if (appointments.isEmpty) {
+      return const Center(child: Text('No appointments found'));
+    }
     return ListView.builder(
       itemCount: appointments.length,
       itemBuilder: (context, index) {
@@ -197,10 +236,19 @@ class _AppointementsScreenState extends State<AppointementsScreen>
                 padding: const EdgeInsets.all(16.0),
                 child: Row(
                   children: [
-                    const CircleAvatar(
-                        radius: 30,
-                        child: Image(
-                            image: AssetImage('assets/images/image1.png'))),
+                    appointment['image'] != null &&
+                            appointment['image'].isNotEmpty
+                        ? CircleAvatar(
+                            radius: 30,
+                            backgroundImage: NetworkImage(appointment['image']),
+                            onBackgroundImageError: (_, __) =>
+                                const Icon(Icons.error),
+                          )
+                        : const CircleAvatar(
+                            radius: 30,
+                            child: Image(
+                                image: AssetImage('assets/images/image1.png')),
+                          ),
                     const SizedBox(width: 16),
                     Expanded(
                       child: Column(
@@ -220,28 +268,44 @@ class _AppointementsScreenState extends State<AppointementsScreen>
                                         AppText(
                                           title: '• Done',
                                           color: AppColors.primary,
+                                          fontSize: 14,
                                         )
                                       ],
                                     )
                                   : AppText(
                                       onTap: () {
-                                        RouteUtils.push(context,
-                                            AppointmentsEditScreen());
+                                        RouteUtils.push(
+                                          context,
+                                          AppointmentsEditScreen(
+                                            appointmentId: appointment['id'],
+                                            doctorId: appointment['doctorId'],
+                                          ),
+                                        );
                                       },
                                       title: 'Edit',
                                       color: AppColors.primary,
+                                      decorationColor: AppColors.primary,
+                                      fontSize: 14,
                                       decoration: TextDecoration.underline,
-                                    )
+                                    ),
                             ],
                           ),
-                          const Text(
-                            'Dentist',
-                            style: TextStyle(color: Colors.grey),
+                          Text(
+                            appointment['specialty'],
+                            style: const TextStyle(color: Colors.grey),
                           ),
                           const SizedBox(height: 4),
-                          Text(
-                            'At ${appointment['time']}',
-                            style: const TextStyle(fontSize: 14),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Color.fromARGB(255, 228, 250, 248),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              'At ${appointment['time']}',
+                              style: const TextStyle(fontSize: 14),
+                            ),
                           ),
                         ],
                       ),

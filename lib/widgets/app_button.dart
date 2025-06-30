@@ -5,10 +5,12 @@ import 'app_text.dart';
 class AppButton extends StatelessWidget {
   final String title;
   final void Function()? onTap;
-  const AppButton({
+  bool ?isLoading;
+   AppButton({
     super.key,
     required this.title,
     this.onTap, 
+    this.isLoading
   });
 
   @override

@@ -7,14 +7,18 @@ import 'package:graduation_project/core/themes/colors.dart';
 import 'package:graduation_project/core/themes/text_styles.dart';
 import 'package:graduation_project/core/utils/colors.dart';
 import 'package:graduation_project/core/models/doctor_profile_model.dart';
+import 'package:graduation_project/screens/chat/chat_room_screen.dart';
+import 'package:graduation_project/screens/chat/services/chat_services.dart';
 import 'package:graduation_project/screens/patient/booking/booking_screen.dart';
 import 'package:graduation_project/widgets/app_text.dart';
-
 import '../../../core/services/doctor_profile_api_service.dart';
 
 class DoctorScreen extends StatefulWidget {
-  const DoctorScreen(
-      {super.key, required this.doctorId, required this.specialty});
+  const DoctorScreen({
+    super.key,
+    required this.doctorId,
+    required this.specialty,
+  });
   final int doctorId;
   final String specialty;
 
@@ -24,6 +28,7 @@ class DoctorScreen extends StatefulWidget {
 
 class _DoctorScreenState extends State<DoctorScreen> {
   late final Future<DoctorProfileModel?> doctorFuture;
+
   @override
   void initState() {
     super.initState();
@@ -35,18 +40,19 @@ class _DoctorScreenState extends State<DoctorScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder<DoctorProfileModel?>(
-          future: doctorFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError || snapshot.data == null) {
-              return const Center(child: Text("Failed to load"));
-            }
+        future: doctorFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError || snapshot.data == null) {
+            return const Center(child: Text("Failed to load"));
+          }
 
-            final doctor = snapshot.data!;
-            return Stack(
-              children: [
-                Column(children: [
+          final doctor = snapshot.data!;
+          return Stack(
+            children: [
+              Column(
+                children: [
                   const HeaderRow(
                     text: 'Doctor Details',
                   ),
@@ -55,8 +61,8 @@ class _DoctorScreenState extends State<DoctorScreen> {
                   ),
                   Expanded(
                     child: SingleChildScrollView(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 16.w, vertical: 12.h),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -106,26 +112,50 @@ class _DoctorScreenState extends State<DoctorScreen> {
                               SizedBox(
                                 width: 40.w,
                               ),
-                              Column(
-                                children: [
-                                  CircleAvatar(
-                                    backgroundColor: AppColor.primarycolor,
-                                    child: SvgPicture.asset(
-                                      'assets/icons/chats.svg',
-                                      colorFilter: ColorFilter.mode(
-                                          Colors.white, BlendMode.srcIn),
+                              GestureDetector(
+                                onTap: () async {
+                                  try {
+                                    final chatService = ChatService();
+                                    final chatData = await chatService
+                                        .startChat(widget.doctorId);
+                                    RouteUtils.push(
+                                      context,
+                                      ChatRoomScreen(
+                                        chatId: chatData['chatId'],
+                                        targetId: chatData['targetId'],
+                                        targetName: chatData['targetName'],
+                                        targetImage: chatData['targetImage'],
+                                      ),
+                                    );
+                                  } catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content:
+                                              Text('Failed to start chat: $e')),
+                                    );
+                                  }
+                                },
+                                child: Column(
+                                  children: [
+                                    CircleAvatar(
+                                      backgroundColor: AppColor.primarycolor,
+                                      child: SvgPicture.asset(
+                                        'assets/icons/chats.svg',
+                                        colorFilter: ColorFilter.mode(
+                                            Colors.white, BlendMode.srcIn),
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 7,
-                                  ),
-                                  Text(
-                                    'Chat Doctor',
-                                    style: textStyle12(
-                                        fontSize: 10.sp, letterSpacing: 0),
-                                  )
-                                ],
-                              )
+                                    SizedBox(
+                                      height: 7,
+                                    ),
+                                    Text(
+                                      'Chat Doctor',
+                                      style: textStyle12(
+                                          fontSize: 10.sp, letterSpacing: 0),
+                                    )
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                           const SizedBox(height: 16),
@@ -135,7 +165,8 @@ class _DoctorScreenState extends State<DoctorScreen> {
                               Column(
                                 children: [
                                   Image(
-                                    image: AssetImage('assets/images/Group 15.png'),
+                                    image: AssetImage(
+                                        'assets/images/Group 15.png'),
                                   ),
                                   AppText(
                                     title: doctor.offer == null
@@ -206,45 +237,48 @@ class _DoctorScreenState extends State<DoctorScreen> {
                           const SizedBox(
                             height: 70,
                           ),
-
                         ],
                       ),
                     ),
                   ),
-
-                ]),
-                Positioned(
-                  bottom: 10,
-                  left: 16,
-                  right: 16,
-                  child: InkWell(
-                    onTap: () {
-                      RouteUtils.push(context, BookingScreen());
-                    },
-                    child: Container(
-                      height: 56,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: AppColors.primary,
-                        borderRadius: BorderRadius.circular(60),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          AppText(
-                            title: 'Book Appointement',
-                            color: AppColors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18,
-                          ),
-                        ],
-                      ),
+                ],
+              ),
+              Positioned(
+                bottom: 10,
+                left: 16,
+                right: 16,
+                child: InkWell(
+                  onTap: () {
+                    RouteUtils.push(
+                      context,
+                      BookingScreen(doctorId: widget.doctorId),
+                    );
+                  },
+                  child: Container(
+                    height: 56,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(60),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        AppText(
+                          title: 'Book Appointment',
+                          color: AppColors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                        ),
+                      ],
                     ),
                   ),
-                )
-              ],
-            );
-          }),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }

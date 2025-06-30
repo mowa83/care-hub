@@ -4,12 +4,8 @@ import 'package:graduation_project/core/route_utils/route_utils.dart';
 import 'package:graduation_project/core/shared_widgets/custom_button.dart';
 import 'package:graduation_project/core/themes/colors.dart';
 import 'package:graduation_project/core/themes/text_styles.dart';
-import 'package:graduation_project/features/doctor/profile/presentation/views/profile_view.dart' as doctor;
-import 'package:graduation_project/features/nurse/profile/presentation/views/profile_view.dart'as nurse;
-import 'package:graduation_project/features/patient/profile/presentation/views/profile_view.dart'as patient;
-
-
-
+import 'package:graduation_project/screens/doctor/signup/signup_doctor_nurse_screen.dart';
+import 'package:graduation_project/screens/patient/signup/chronic_diseases_screen.dart';
 
 class UserTypeBody extends StatefulWidget {
   const UserTypeBody({super.key});
@@ -36,7 +32,7 @@ class _UserTypeBodyState extends State<UserTypeBody> {
               GestureDetector(
                   onTap: () {
                     setState(() {
-                      selectedUserType = 'Doctor'; // Update selected user type
+                      selectedUserType = 'Doctor'; 
                     });
                   },
                   child: Container(
@@ -89,7 +85,7 @@ class _UserTypeBodyState extends State<UserTypeBody> {
                       decoration: BoxDecoration(
                         border: selectedUserType == 'Patient'
                             ? Border.all(
-                                color:AppColor.primarycolor,
+                                color: AppColor.primarycolor,
                                 width: 3) // Add border if selected
                             : null,
                       ),
@@ -104,24 +100,21 @@ class _UserTypeBodyState extends State<UserTypeBody> {
               customButton(
                   func: () {
                     if (selectedUserType == null) {
-                      // Show an error if no user type is selected
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Please select a user type.'),
                         ),
                       );
                     } else {
-                      // Navigate to the appropriate screen based on the selected user type
-                      switch (selectedUserType) {
-                        case 'Doctor':
-                          RouteUtils.pushAndRemoveAll(context, doctor.ProfileView());
-                          break;
-                        case 'Nurse':
-                          RouteUtils.pushAndRemoveAll(context, nurse.ProfileView());
-                          break;
-                        case 'Patient':
-                          RouteUtils.pushAndRemoveAll(context, patient.ProfileView());
-                          break;
+                      if (selectedUserType == 'Doctor' ||
+                          selectedUserType == 'Nurse') {
+                        RouteUtils.pushAndRemoveAll(
+                          context,
+                          SignupDoctorNurseScreen(userType: selectedUserType!),
+                        );
+                      } else if (selectedUserType == 'Patient') {
+                        RouteUtils.pushAndRemoveAll(
+                            context,  ChronicDiseasesScreen());
                       }
                     }
                   },
@@ -135,4 +128,3 @@ class _UserTypeBodyState extends State<UserTypeBody> {
     );
   }
 }
-

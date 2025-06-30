@@ -3,7 +3,9 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import '../core/utils/colors.dart';
 
 class AppPinCodeField extends StatelessWidget {
-  const AppPinCodeField({super.key});
+  final Function(String) onChanged;
+
+  const AppPinCodeField({super.key, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class AppPinCodeField extends StatelessWidget {
       ),
       animationDuration: Duration(milliseconds: 300),
       enableActiveFill: true,
-      onChanged: (value) {},
+      onChanged: onChanged,
       appContext: context,
     );
   }

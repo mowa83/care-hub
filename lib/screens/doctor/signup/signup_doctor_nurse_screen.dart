@@ -1,32 +1,27 @@
+import 'package:flutter/material.dart';
 import 'package:graduation_project/core/route_utils/route_utils.dart';
 import 'package:graduation_project/core/utils/colors.dart';
 import 'package:graduation_project/core/utils/validator.dart';
-import 'package:graduation_project/screens/doctor/signup/Verify_Signup_Doctor_Nurse.dart';
+import 'package:graduation_project/screens/doctor/signup/doc_nurse_signup.dart';
 import 'package:graduation_project/widgets/app_button.dart';
-import 'package:flutter/material.dart';
 import 'package:graduation_project/widgets/app_date_picker.dart';
 import 'package:graduation_project/widgets/app_gender_picker.dart';
 import 'package:graduation_project/widgets/app_head_line.dart';
 import 'package:graduation_project/widgets/app_text.dart';
 import 'package:graduation_project/widgets/app_text_field.dart';
 
-
 class SignupDoctorNurseScreen extends StatefulWidget {
-  const SignupDoctorNurseScreen({super.key});
+  final String userType;
+  const SignupDoctorNurseScreen({super.key, required this.userType});
 
   @override
-  State<SignupDoctorNurseScreen> createState() => _SignupDoctorNurseScreenState();
+  State<SignupDoctorNurseScreen> createState() =>
+      _SignupDoctorNurseScreenState();
 }
 
 class _SignupDoctorNurseScreenState extends State<SignupDoctorNurseScreen> {
   final formKey = GlobalKey<FormState>();
   bool check = false;
-  String? validateCheckbox(bool? value) {
-    if (value == false) {
-      return 'You must agree to the terms and conditions';
-    }
-    return null;
-  }
   final fullNameController = TextEditingController();
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
@@ -34,6 +29,7 @@ class _SignupDoctorNurseScreenState extends State<SignupDoctorNurseScreen> {
   final confirmPasswordController = TextEditingController();
   final birthDateController = TextEditingController();
   String? selectedGender;
+  String? selectedBirthDate;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +42,7 @@ class _SignupDoctorNurseScreenState extends State<SignupDoctorNurseScreen> {
             SizedBox(height: 50),
             Center(
               child: AppText(
-                title: 'Create Account',
+                title: 'Create Account (${widget.userType})',
                 fontWeight: FontWeight.w500,
                 fontSize: 25,
               ),
@@ -58,9 +54,7 @@ class _SignupDoctorNurseScreenState extends State<SignupDoctorNurseScreen> {
               hint: 'Enter Your Name',
               validator: Validator.fullName,
             ),
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 10),
             AppHeadLine(photo: 'sms', labal: 'Email'),
             AppTextField(
               controller: emailController,
@@ -72,10 +66,10 @@ class _SignupDoctorNurseScreenState extends State<SignupDoctorNurseScreen> {
             AppTextField(
               controller: phoneController,
               hint: 'Enter Your Mobile Number',
-              validator: Validator.phone,
+              //validator: Validator.phone,
             ),
             SizedBox(height: 16),
-            AppHeadLine(photo: 'lock', labal: 'password'),
+            AppHeadLine(photo: 'lock', labal: 'Password'),
             AppTextField(
               controller: passwordController,
               hint: 'Enter Your Password',
@@ -83,42 +77,49 @@ class _SignupDoctorNurseScreenState extends State<SignupDoctorNurseScreen> {
               validator: Validator.password,
             ),
             SizedBox(height: 16),
-            AppHeadLine(photo: 'lock', labal: 'Confirm password'),
+            AppHeadLine(photo: 'lock', labal: 'Confirm Password'),
             AppTextField(
               controller: confirmPasswordController,
-              hint: 'Enter Your Password',
+              hint: 'Confirm Your Password',
               secure: true,
-              validator: Validator.password,
+              validator: (value) {
+                if (value != passwordController.text) {
+                  return 'Passwords do not match';
+                }
+                return Validator.password(value);
+              },
             ),
-            SizedBox(
-              height: 16,
-            ),
-            AppHeadLine(photo: 'lock', labal: 'Birth Of Date'),
-            SizedBox(
-              height: 3,
-            ),
+            SizedBox(height: 16),
+            AppHeadLine(photo: 'calendar', labal: 'Birth Date'),
+            SizedBox(height: 3),
             AppDatePicker(
-                hint: 'Enter Your Birth Date', validator: Validator.date),
-            SizedBox(
-              height: 16,
+              controller: birthDateController,
+              hint: 'Enter Your Birth Date',
+              validator: Validator.date,
+              onDateSelected: (apiDate) {
+                setState(() {
+                  selectedBirthDate = apiDate; 
+                });
+              },
             ),
+            SizedBox(height: 16),
             Row(
               children: const [
-                SizedBox(
-                  width: 5,
+                SizedBox(width: 5),
+                AppText(
+                  title: 'Gender',
+                  fontSize: 17,
+                  fontWeight: FontWeight.w500,
                 ),
                 AppText(
-                    title: 'Gender', fontSize: 17, fontWeight: FontWeight.w500),
-                AppText(
-                    title: '*',
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.primary),
+                  title: '*',
+                  fontSize: 17,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.primary,
+                ),
               ],
             ),
-            SizedBox(
-              height: 4,
-            ),
+            SizedBox(height: 4),
             AppGenderPicker(
               onGenderSelected: (gender) {
                 setState(() => selectedGender = gender);
@@ -127,9 +128,7 @@ class _SignupDoctorNurseScreenState extends State<SignupDoctorNurseScreen> {
               validator: (value) =>
                   selectedGender == null ? 'Please select a gender' : null,
             ),
-            SizedBox(
-              height: 16,
-            ),
+            SizedBox(height: 16),
             Column(
               children: [
                 Row(
@@ -147,15 +146,15 @@ class _SignupDoctorNurseScreenState extends State<SignupDoctorNurseScreen> {
                         AppText(
                           title: 'By Clicking, you agree to',
                           fontWeight: FontWeight.w400,
-                          fontSize: 14,
+                          fontSize: 12,
                           color: AppColors.grey,
                         ),
                         AppText(
                           title: ' Terms & Conditions',
                           fontWeight: FontWeight.w500,
-                          fontSize: 14,
+                          fontSize: 12,
                           color: AppColors.primary,
-                        )
+                        ),
                       ],
                     ),
                   ],
@@ -191,9 +190,29 @@ class _SignupDoctorNurseScreenState extends State<SignupDoctorNurseScreen> {
               title: 'Create',
               onTap: () {
                 if (formKey.currentState!.validate()) {
-                  RouteUtils.push(context, VerifySignupDoctorNurseScreen());
-                } else {
-                  return;
+                  if (selectedBirthDate == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Please select a birth date.'),
+                      ),
+                    );
+                    return;
+                  }
+                  final formData = {
+                    'fullName': fullNameController.text,
+                    'email': emailController.text,
+                    'phone': phoneController.text,
+                    'password': passwordController.text,
+                    'birthDate': selectedBirthDate,
+                    'gender': selectedGender,
+                  };
+                  RouteUtils.push(
+                    context,
+                    DocNurseSignup(
+                      userType: widget.userType,
+                      formData: formData,
+                    ),
+                  );
                 }
               },
             ),
@@ -202,5 +221,16 @@ class _SignupDoctorNurseScreenState extends State<SignupDoctorNurseScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    fullNameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    birthDateController.dispose();
+    super.dispose();
   }
 }
