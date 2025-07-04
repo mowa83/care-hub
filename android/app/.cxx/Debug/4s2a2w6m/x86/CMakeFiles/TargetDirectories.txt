@@ -1,2 +1,0 @@
-D:/care-hub-main/care-hub-main/android/app/.cxx/Debug/4s2a2w6m/x86/CMakeFiles/edit_cache.dir
-D:/care-hub-main/care-hub-main/android/app/.cxx/Debug/4s2a2w6m/x86/CMakeFiles/rebuild_cache.dir

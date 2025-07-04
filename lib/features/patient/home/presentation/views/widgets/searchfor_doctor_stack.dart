@@ -43,7 +43,9 @@ class SearchForDoctorStack extends StatelessWidget {
                 child: MaterialButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const ChooseSpecialtyView(type: 'doctor',),
+                      builder: (context) => const ChooseSpecialtyView(
+                        type: 'doctor',
+                      ),
                     ));
                   },
                   shape: const RoundedRectangleBorder(

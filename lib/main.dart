@@ -1,4 +1,7 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:graduation_project/features/patient/home/presentation/views/widgets/home_body.dart';
 // import 'package:graduation_project/features/doctor/home/presentation/views/home_view.dart';
@@ -18,13 +21,45 @@ import 'package:graduation_project/screens/login/login_screen.dart';
 // import 'package:graduation_project/features/patient/splash/presentation/views/splash1_view.dart';
 
 
-void main() {
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+FlutterLocalNotificationsPlugin();
+
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print("🔕 رسالة في الخلفية: ${message.messageId}");
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  const AndroidNotificationChannel channel = AndroidNotificationChannel(
+    'general_channel', // يجب أن يتطابق مع ID المستخدم عند عرض الإشعارات
+    'Care-Hub Notifications',
+    description:'Important Care-Hub alerts',
+    importance: Importance.max,
+    playSound: true,
+    showBadge: true,
+
+  );
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
+  const AndroidInitializationSettings androidSettings =
+  AndroidInitializationSettings('@drawable/ic_notification');
+  const InitializationSettings initSettings = InitializationSettings(
+    android: androidSettings,
+  );
+  await flutterLocalNotificationsPlugin.initialize(initSettings);
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(
     ScreenUtilInit(
       designSize: const Size(375, 812), 
       minTextAdapt: true,
       builder: (context, child) {
-        return const MyApp();
+        return  MyApp();
       },
     ),
   );

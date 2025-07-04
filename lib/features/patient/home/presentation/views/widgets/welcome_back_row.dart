@@ -10,34 +10,30 @@ final String patientName;
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: 69.h),
-      child: SizedBox(
-        width: 132.w,
-        // height: 36.h,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          // mainAxisSize: MainAxisSize.max,
-          children: [
-            SvgPicture.asset(
-              'assets/icons/profile-circle.svg',
-              width: 34.w,
-              // height: 36.h,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Welcome Back',
-                  style: textStyle12(letterSpacing: .08),
-                ),
-                Text('Mr. $patientName',
-                    style: textStyle12(
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: .07,
-                    ))
-              ],
-            )
-          ],
-        ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SvgPicture.asset(
+            'assets/icons/profile-circle.svg',
+            width: 34.w,
+            // height: 36.h,
+          ),
+          SizedBox(width: 12.w,),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Welcome Back',
+                style: textStyle12(letterSpacing: .08),
+              ),
+              Text('Mr. $patientName',
+                  style: textStyle12(
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: .07,
+                  ))
+            ],
+          )
+        ],
       ),
     );
   }

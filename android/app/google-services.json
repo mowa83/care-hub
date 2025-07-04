@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "202706113175",
+    "project_id": "care-hup",
+    "storage_bucket": "care-hup.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:202706113175:android:ece5abd8511ee423610fd2",
+        "android_client_info": {
+          "package_name": "com.example.graduation_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqmUwoNA092vydXsmfTcP_B0DC9ctOFdY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

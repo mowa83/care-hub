@@ -1,18 +1,24 @@
 import 'package:graduation_project/core/constants/config.dart';
 import 'package:graduation_project/core/models/doctor_profile_model.dart';
+import 'package:graduation_project/screens/login/services/shared_login_prefs.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 class ApiService {
-  // static const String url = '$baseUrl/user/';
-  static const Map<String, String> _headers = {
-    'Content-Type': 'application/json',
-    'Authorization':
-    'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc3MzgzNzQzLCJpYXQiOjE3NDQ5ODM3NDMsImp0aSI6IjA3MDUwZmEyNTMzMzQ4YTRiOGZhM2I1NWI3MmEzMTJhIiwidXNlcl9pZCI6MTV9.f9xgNJUwMr1_7EovPxsO5hLad_H_CiwckX4jas2LPns',
-  };
+  Future<Map<String, String>> _getHeaders() async {
+    final token = await SharedPrefsUtils.getAccess();
+    if (token == null) {
+      throw Exception('No token found');
+    }
+
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+  }
   Future<DoctorProfileModel?> fetchProfileModel(String url) async {
     try {
-      final response = await http.get(Uri.parse("$baseUrl/api$url"), headers: _headers);
+      final headers = await _getHeaders();
+      final response = await http.get(Uri.parse("$baseUrl/api$url"), headers: headers);
 
       // print("Response Body: ${response.body}");
       if (response.statusCode == 200) {
@@ -31,8 +37,9 @@ class ApiService {
 
   Future<bool> updateProfile(DoctorProfileModel updatedProfile,String url) async {
     try {
+      final headers = await _getHeaders();
       final response = await http.put( Uri.parse("$baseUrl/api$url"),
-          headers: _headers, body: doctorProfileModelToJson(updatedProfile));
+          headers: headers, body: doctorProfileModelToJson(updatedProfile));
 
       if (response.statusCode == 200) {
         print("Profile updated successfully");

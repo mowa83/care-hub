@@ -260,8 +260,8 @@ class _ProfileBodyState extends State<ProfileBody> {
                                   int.tryParse(_experienceController.text),
                             );
 
-                            final success = await ApiService()
-                                .updateProfile(updatedProfile,'/edit_my_profile/');
+                            final success = await ApiService().updateProfile(
+                                updatedProfile, '/edit_my_profile/');
                             if (!context.mounted) return;
                             if (success) {
                               ScaffoldMessenger.of(context).showSnackBar(

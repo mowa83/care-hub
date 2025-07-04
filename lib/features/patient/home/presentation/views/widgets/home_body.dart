@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:graduation_project/core/themes/text_styles.dart';
@@ -26,7 +27,7 @@ class _HomeBodyState extends State<HomeBody> {
     // TODO: implement initState
     super.initState();
     combinedFuture = Future.wait([
-      DoctorsApiService().fetchDoctors('has_offer=Yes'),
+      DoctorsApiService().fetchDoctors('has_offer=True&limit=3'),
       ApiService().fetchProfile(),
     ]);
   }
@@ -43,15 +44,13 @@ class _HomeBodyState extends State<HomeBody> {
                 return const Center(child: Text("Failed to load the Profile"));
               }
 
-              final List<Result>? offer = snapshot.data![0] as List<Result>?;
-              final PatientProfileModel? patient = snapshot.data![1] as PatientProfileModel?;
+              final DoctorsModel? offer = snapshot.data![0] as DoctorsModel?;
+              final PatientProfileModel? patient =
+                  snapshot.data![1] as PatientProfileModel?;
               if (offer == null || patient == null) {
                 return const Center(child: Text("Something went wrong"));
               }
-              final topOffers = offer
-                  .where((element) => element.offer != null)
-                  .take(3)
-                  .toList();
+
               return SingleChildScrollView(
                 child: Container(
                   alignment: Alignment.center,
@@ -60,7 +59,9 @@ class _HomeBodyState extends State<HomeBody> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                         WelcomeBackRow(patientName: patient.user?.username??'',),
+                        WelcomeBackRow(
+                          patientName: patient.user?.username ?? '',
+                        ),
                         SizedBox(
                           height: 23.h,
                         ),
@@ -85,25 +86,23 @@ class _HomeBodyState extends State<HomeBody> {
                         const OurOffersRow(),
                         SizedBox(
                           child: ListView.separated(
-
                             separatorBuilder: (context, index) {
                               return const SizedBox(
                                 height: 24,
                               );
                             },
                             itemBuilder: (context, index) {
-
-                                return DoctorsOffers(
-                                  doctorName: topOffers[index].user?.username ?? '',
-                                  doctorSpecialty:
-                                  topOffers[index].specialty ?? '',
-                                  price: topOffers[index].price ?? 0,
-                                  offer: topOffers[index].offer??0,
-                                  doctorId: topOffers[index].id!,
-                                  photo: topOffers[index].user?.image??'',
-                                );
+                              return DoctorsOffers(
+                                doctorName:
+                                offer.results?[index].user?.username ?? '',
+                                doctorSpecialty: offer.results?[index].specialty ?? '',
+                                price: offer.results?[index].price ?? 0,
+                                offer: offer.results?[index].offer ?? 0,
+                                doctorId: offer.results?[index].id??0,
+                                photo: offer.results?[index].user?.image ?? '',
+                              );
                             },
-                            itemCount:topOffers.length,
+                            itemCount: offer.results!.length,
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             padding: const EdgeInsets.only(top: 14, bottom: 14),

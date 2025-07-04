@@ -18,11 +18,15 @@ class SharedPrefsUtils {
     await prefs.setInt(_userIdKey, userId);
     await prefs.setInt(_profileIdKey, profileId);
     await prefs.setString(_userTypeKey, userType);
+    print('💾 access token saved: $access');
   }
 
   static Future<String?> getAccess() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_accessKey);
+    // return prefs.getString(_accessKey);
+    String? access = prefs.getString(_accessKey);
+    print('🔐 جلبنا التوكن من SharedPrefs: $access');
+    return access;
   }
 
   static Future<int?> getUserId() async {

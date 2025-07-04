@@ -1,2 +1,0 @@
-D:/New folder/care-hub/android/app/.cxx/Debug/09140271/armeabi-v7a/CMakeFiles/edit_cache.dir
-D:/New folder/care-hub/android/app/.cxx/Debug/09140271/armeabi-v7a/CMakeFiles/rebuild_cache.dir

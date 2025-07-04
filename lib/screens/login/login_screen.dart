@@ -1,11 +1,18 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:graduation_project/core/route_utils/route_utils.dart';
+import 'package:graduation_project/core/themes/colors.dart';
 import 'package:graduation_project/core/utils/colors.dart';
 import 'package:graduation_project/core/utils/validator.dart';
-import 'package:graduation_project/features/patient/home/presentation/views/home_view.dart'as patient;
-import 'package:graduation_project/features/nurse/home/presentation/views/home_view.dart' as nurse;
-import 'package:graduation_project/features/doctor/home/presentation/views/home_view.dart'as doctor;
+import 'package:graduation_project/features/patient/home/presentation/views/home_view.dart'
+    as patient;
+import 'package:graduation_project/features/nurse/home/presentation/views/home_view.dart'
+    as nurse;
+import 'package:graduation_project/features/doctor/home/presentation/views/home_view.dart'
+    as doctor;
 import 'package:graduation_project/features/patient/splash/presentation/views/user_type_view.dart';
+import 'package:graduation_project/screens/login/services/notification_token_service.dart';
 import 'package:graduation_project/screens/reset_password/forget_password_screen.dart';
 import 'package:graduation_project/screens/login/services/login_model.dart';
 import 'package:graduation_project/screens/login/services/login_service.dart';
@@ -21,7 +28,8 @@ class LoginScreen extends StatefulWidget {
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
-
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+FlutterLocalNotificationsPlugin();
 class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
@@ -49,6 +57,42 @@ class _LoginScreenState extends State<LoginScreen> {
           profileId: response['profile_id'],
           userType: response['user_type'],
         );
+             // 🔔 تهيئة الإشعارات قبل الانتقال لأي شاشة
+        await NotificationTokenService().initFCM();
+
+            // (اختياري) استقبال الإشعار والتطبيق مفتوح
+        FirebaseMessaging.onMessage.listen((RemoteMessage message)async {
+          print("📩 إشعار داخل التطبيق:");
+          print("🔔 ${message.notification?.title}");
+          print("📝 ${message.notification?.body}");
+          RemoteNotification? notification = message.notification;
+          AndroidNotification? android = message.notification?.android;
+
+          if (notification != null && android != null) {
+            await flutterLocalNotificationsPlugin.show(
+              notification.hashCode,
+              notification.title,
+              notification.body,
+              NotificationDetails(
+                android: AndroidNotificationDetails(
+                  'general_channel',
+                  'Care-Hub Notifications',
+                  channelDescription: 'Important Care-Hub alerts',
+                  importance: Importance.max,
+                  priority: Priority.high,
+                  ticker: 'New urgent notification', // مهم لـ Heads-up
+                  icon: '@drawable/ic_notification',
+                  color:  AppColor.primarycolor,
+                  playSound: true,
+                  visibility: NotificationVisibility.public,
+                  fullScreenIntent: true, // يظهر حتى مع الشاشة مغلقة
+                  timeoutAfter: 5000,
+                  styleInformation: BigTextStyleInformation(notification.body??''),
+                ),
+              ),
+            );
+          }
+        });
         switch (response['user_type']) {
           case 'Patient':
             RouteUtils.pushReplacement(context, patient.HomeView());
@@ -164,7 +208,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: AppColors.primary,
                       fontWeight: FontWeight.w500,
                       fontSize: 15,
-                      onTap: () => RouteUtils.pushReplacement(
+                      onTap: () => RouteUtils.push(
                           context, const UserTypeView()),
                     ),
                   ],
