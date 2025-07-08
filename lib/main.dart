@@ -9,6 +9,7 @@ import 'package:graduation_project/features/patient/home/presentation/views/widg
 import 'package:graduation_project/features/patient/home/presentation/views/home_view.dart';
 import 'package:graduation_project/features/patient/splash/presentation/views/splash1_view.dart';
 import 'package:graduation_project/screens/doctor/booking/appointments_doctor_screen.dart';
+import 'package:graduation_project/screens/doctor/booking/patient_screen.dart';
 import 'package:graduation_project/screens/doctor/booking/set_appointment_screen.dart';
 import 'package:graduation_project/screens/patient/booking/appointments_edit_screen.dart';
 import 'package:graduation_project/screens/patient/booking/appointments_screen.dart';

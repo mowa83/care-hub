@@ -7,11 +7,11 @@ import 'package:graduation_project/features/patient/home/presentation/views/widg
 import 'package:graduation_project/features/patient/home/presentation/views/widgets/searchfor_doctor_stack.dart';
 import 'package:graduation_project/features/patient/home/presentation/views/widgets/services_row.dart';
 import 'package:graduation_project/features/patient/home/presentation/views/widgets/welcome_back_row.dart';
-import 'package:graduation_project/features/patient/profile/data/models/patient_profile_model.dart';
+import 'package:graduation_project/core/models/patient_profile_model.dart';
 
 import '../../../../../../core/models/doctors_model.dart';
 import '../../../../../../core/services/doctors_api_service.dart';
-import '../../../../profile/presentation/view model/patient_profile_api_service.dart';
+import '../../../../../../core/services/patient_profile_api_service.dart';
 
 class HomeBody extends StatefulWidget {
   const HomeBody({super.key});
@@ -28,7 +28,7 @@ class _HomeBodyState extends State<HomeBody> {
     super.initState();
     combinedFuture = Future.wait([
       DoctorsApiService().fetchDoctors('has_offer=True&limit=3'),
-      ApiService().fetchProfile(),
+      ApiService().fetchProfile("my_profile/"),
     ]);
   }
 

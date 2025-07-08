@@ -24,9 +24,9 @@ class ProfileImage extends StatelessWidget {
                     height: 87.h,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
-                      return img;
+                      return Icon(Icons.error);
                     },
                   )
-                : img));
+                : Icon(Icons.error)));
   }
 }

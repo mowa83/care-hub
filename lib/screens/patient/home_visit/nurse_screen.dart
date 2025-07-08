@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:graduation_project/core/models/doctor_nurse_profile_model.dart';
 import 'package:graduation_project/core/route_utils/route_utils.dart';
 import 'package:graduation_project/core/shared_widgets/header_row.dart';
 import 'package:graduation_project/core/themes/colors.dart';
 import 'package:graduation_project/core/utils/colors.dart';
 import 'package:graduation_project/screens/chat/chat_room_screen.dart';
 import 'package:graduation_project/screens/chat/services/chat_services.dart';
-import 'package:graduation_project/screens/patient/home_visit/services/nurse_model.dart';
-import 'package:graduation_project/screens/patient/home_visit/services/nurse_service.dart';
 import 'package:graduation_project/widgets/app_text.dart';
+import '../../../core/services/doctor_nurse_profile_service.dart';
 
 class NurseScreen extends StatefulWidget {
   const NurseScreen({super.key, required this.nurseId});
@@ -19,18 +19,18 @@ class NurseScreen extends StatefulWidget {
 }
 
 class _NurseScreenState extends State<NurseScreen> {
-  late final Future<NurseModel?> nurseFuture;
+  late final Future<DoctorNurseProfileModel?> nurseFuture;
 
   @override
   void initState() {
     super.initState();
-    nurseFuture = NurseService().fetchNurse(widget.nurseId);
+    nurseFuture = ApiService().fetchProfileModel('/nurse/${widget.nurseId}');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<NurseModel?>(
+      body: FutureBuilder<DoctorNurseProfileModel?>(
         future: nurseFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

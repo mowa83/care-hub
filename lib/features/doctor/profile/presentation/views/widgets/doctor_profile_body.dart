@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:graduation_project/core/models/doctor_nurse_profile_model.dart';
 import 'package:graduation_project/core/shared_widgets/build_gender_dropdown.dart';
 import 'package:graduation_project/core/shared_widgets/profile_bottom_button.dart';
 import 'package:graduation_project/core/shared_widgets/profile_header.dart';
 import 'package:graduation_project/core/shared_widgets/profile_image.dart';
 import 'package:graduation_project/core/shared_widgets/profile_text_field.dart';
 import 'package:graduation_project/core/shared_widgets/show_logout_dialog.dart';
-import 'package:graduation_project/core/models/doctor_profile_model.dart';
-import 'package:graduation_project/core/services/doctor_profile_api_service.dart';
+import 'package:graduation_project/core/services/doctor_nurse_profile_service.dart';
 import 'package:intl/intl.dart';
 
 class ProfileBody extends StatefulWidget {
@@ -20,8 +20,8 @@ class ProfileBody extends StatefulWidget {
 class _ProfileBodyState extends State<ProfileBody> {
   final List<String> _genderOptions = ['Male', 'Female'];
   String? _selectedGender;
-  DoctorProfileModel? originalProfile;
-  late Future<DoctorProfileModel?> userFuture;
+  DoctorNurseProfileModel? originalProfile;
+  late Future<DoctorNurseProfileModel?> userFuture;
   bool isEditing = false;
   bool isDataInitialized = false;
   late final List<Map<String, dynamic>> items;
@@ -99,7 +99,7 @@ class _ProfileBodyState extends State<ProfileBody> {
     ];
   }
 
-  void _setControllers(DoctorProfileModel user) {
+  void _setControllers(DoctorNurseProfileModel user) {
     _nameController.text = user.user?.username ?? '';
     _birthdayController.text = user.user?.birthDate != null
         ? DateFormat('yyyy-MM-dd').format(user.user!.birthDate!)
@@ -160,7 +160,7 @@ class _ProfileBodyState extends State<ProfileBody> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: FutureBuilder<DoctorProfileModel?>(
+        body: FutureBuilder<DoctorNurseProfileModel?>(
             future: userFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -241,7 +241,7 @@ class _ProfileBodyState extends State<ProfileBody> {
                       ProfileBottomButton(
                           isEditing: isEditing,
                           onSave: () async {
-                            final updatedProfile = DoctorProfileModel(
+                            final updatedProfile = DoctorNurseProfileModel(
                               user: User(
                                 username: _nameController.text,
                                 email: _emailController.text,
@@ -261,7 +261,7 @@ class _ProfileBodyState extends State<ProfileBody> {
                             );
 
                             final success = await ApiService().updateProfile(
-                                updatedProfile, '/edit_my_profile/');
+                                updatedProfile, '/user/edit_Doctor_nurse_profile/');
                             if (!context.mounted) return;
                             if (success) {
                               ScaffoldMessenger.of(context).showSnackBar(
