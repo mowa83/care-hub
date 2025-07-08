@@ -1,11 +1,10 @@
 import 'package:graduation_project/core/constants/config.dart';
-import 'package:graduation_project/features/patient/profile/data/models/patient_profile_model.dart';
+import 'package:graduation_project/core/models/patient_profile_model.dart';
 import 'package:graduation_project/screens/login/services/shared_login_prefs.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ApiService {
-  static const String url = '$baseUrl/api/user/';
   Future<Map<String, String>> _getHeaders() async {
     final token = await SharedPrefsUtils.getAccess();
     if (token == null) {
@@ -18,10 +17,10 @@ class ApiService {
     };
   }
 
-  Future<PatientProfileModel?> fetchProfile() async {
+  Future<PatientProfileModel?> fetchProfile(String url) async {
     try {
       final headers = await _getHeaders();
-      final response = await http.get(Uri.parse("${url}my_profile/"),
+      final response = await http.get(Uri.parse("$baseUrl/api/user/$url"),
           headers: headers);
 
       // print("Response Body: ${response.body}");
@@ -38,25 +37,25 @@ class ApiService {
       return null;
     }
   }
-  // Future<bool> updateProfile(PatientProfileModel updatedProfile) async {
-  //   final url = Uri.parse("${baseUrl}edit_my_profile/");
-  //   try {
-  //     final response = await http.put(
-  //         url,
-  //         headers: _headers,
-  //         body:  patientProfileModelToJson(updatedProfile)
-  //     );
-  //
-  //     if (response.statusCode == 200) {
-  //       print("Profile updated successfully");
-  //       return true;
-  //     } else {
-  //       print("Update failed: ${response.statusCode}");
-  //       return false;
-  //     }
-  //   } catch (e) {
-  //     print("Exception during update: $e");
-  //     return false;
-  //   }
-  // }
+  Future<bool> updateProfile(PatientProfileModel updatedProfile,String url) async {
+    try {
+      final headers = await _getHeaders();
+      final response = await http.put(
+          Uri.parse("$baseUrl/api/user/$url"),
+          headers: headers,
+          body:  patientProfileModelToJson(updatedProfile)
+      );
+
+      if (response.statusCode == 200) {
+        print("Profile updated successfully");
+        return true;
+      } else {
+        print("Update failed: ${response.statusCode}");
+        return false;
+      }
+    } catch (e) {
+      print("Exception during update: $e");
+      return false;
+    }
+  }
 }

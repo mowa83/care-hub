@@ -1,20 +1,20 @@
 import 'dart:convert';
 
-ProfileModel profileModelFromJson(String str) => ProfileModel.fromJson(json.decode(str));
+DoctorNurseProfileModel doctorNurseProfileModelFromJson(String str) => DoctorNurseProfileModel.fromJson(json.decode(str));
 
-String profileModelToJson(ProfileModel data) => json.encode(data.toJson());
+String doctorNurseProfileModelToJson(DoctorNurseProfileModel data) => json.encode(data.toJson());
 
-class ProfileModel {
+class DoctorNurseProfileModel {
   final User? user;
   final int? id;
-  final dynamic price;
-  final dynamic experienceYear;
+  final int? price;
+  final int? experienceYear;
   final String? about;
   final String? certificates;
-  final dynamic offer;
-  final String? services;
+  final int? offer;
+  final dynamic services;
 
-  ProfileModel({
+  DoctorNurseProfileModel({
     this.user,
     this.id,
     this.price,
@@ -25,7 +25,7 @@ class ProfileModel {
     this.services,
   });
 
-  factory ProfileModel.fromJson(Map<String, dynamic> json) => ProfileModel(
+  factory DoctorNurseProfileModel.fromJson(Map<String, dynamic> json) => DoctorNurseProfileModel(
     user: json["user"] == null ? null : User.fromJson(json["user"]),
     id: json["id"],
     price: json["price"],

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:graduation_project/core/models/doctor_nurse_profile_model.dart';
 import 'package:graduation_project/core/route_utils/route_utils.dart';
 import 'package:graduation_project/core/shared_widgets/header_row.dart';
 import 'package:graduation_project/core/themes/colors.dart';
 import 'package:graduation_project/core/themes/text_styles.dart';
 import 'package:graduation_project/core/utils/colors.dart';
-import 'package:graduation_project/core/models/doctor_profile_model.dart';
 import 'package:graduation_project/screens/chat/chat_room_screen.dart';
 import 'package:graduation_project/screens/chat/services/chat_services.dart';
 import 'package:graduation_project/screens/patient/booking/booking_screen.dart';
 import 'package:graduation_project/widgets/app_text.dart';
-import '../../../core/services/doctor_profile_api_service.dart';
+import '../../../core/services/doctor_nurse_profile_service.dart';
 
 class DoctorScreen extends StatefulWidget {
   const DoctorScreen({
@@ -27,7 +27,7 @@ class DoctorScreen extends StatefulWidget {
 }
 
 class _DoctorScreenState extends State<DoctorScreen> {
-  late final Future<DoctorProfileModel?> doctorFuture;
+  late final Future<DoctorNurseProfileModel?> doctorFuture;
 
   @override
   void initState() {
@@ -39,7 +39,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<DoctorProfileModel?>(
+      body: FutureBuilder<DoctorNurseProfileModel?>(
         future: doctorFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
