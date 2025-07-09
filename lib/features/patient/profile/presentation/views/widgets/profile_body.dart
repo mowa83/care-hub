@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:graduation_project/core/shared_widgets/build_gender_dropdown.dart';
 import 'package:graduation_project/core/shared_widgets/profile_bottom_button.dart';
 import 'package:graduation_project/core/shared_widgets/profile_header.dart';
-import 'package:graduation_project/core/shared_widgets/profile_image.dart';
 import 'package:graduation_project/core/shared_widgets/profile_text_field.dart';
 import 'package:graduation_project/core/shared_widgets/show_logout_dialog.dart';
 import 'package:graduation_project/core/models/patient_profile_model.dart';
@@ -158,8 +158,9 @@ class _ProfileBodyState extends State<ProfileBody> {
                       SizedBox(
                         height: 9.h,
                       ),
-                      ProfileImage(
-                        profileImageUrl: user.user!.image,
+                      SvgPicture.asset(
+                        'assets/icons/profile-circle.svg',
+                        width: 97.w,
                       ),
                       SizedBox(
                         height: 20.h,

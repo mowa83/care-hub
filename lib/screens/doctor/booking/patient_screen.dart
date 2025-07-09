@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:graduation_project/core/route_utils/route_utils.dart';
 import 'package:graduation_project/core/shared_widgets/header_row.dart';
-import 'package:graduation_project/core/shared_widgets/profile_image.dart';
 import 'package:graduation_project/core/themes/text_styles.dart';
 import 'package:graduation_project/core/utils/colors.dart';
 import 'package:graduation_project/core/models/patient_profile_model.dart';
@@ -73,10 +72,11 @@ class _ProfileBodyState extends State<PatientScreen> {
                 // SizedBox(height: 200,),
                 Expanded(
                   child: ListView(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 26.h),
+                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
                     children: [
-                      ProfileImage(
-                        profileImageUrl: profile.user!.image,
+                      SvgPicture.asset(
+                        'assets/icons/profile-circle.svg',
+                        width: 97.w,
                       ),
                       ListView.separated(
                         itemBuilder: (context, index) {
@@ -111,7 +111,7 @@ class _ProfileBodyState extends State<PatientScreen> {
                           );
                         },
                         itemCount: profileItems.length,
-                        padding: EdgeInsets.symmetric(vertical: 24.h),
+                        padding: EdgeInsets.symmetric(vertical: 20.h),
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                       ),
@@ -138,7 +138,7 @@ class _ProfileBodyState extends State<PatientScreen> {
                       ),]),
                 ),
                     SizedBox(
-                      height: 65.h,
+                      height: 70.h,
                     )
                   ],
                 ),

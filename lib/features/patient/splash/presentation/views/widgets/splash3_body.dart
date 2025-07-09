@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:graduation_project/core/themes/text_styles.dart';
-import 'package:graduation_project/features/patient/splash/presentation/views/user_type_view.dart';
 import 'package:graduation_project/features/patient/splash/presentation/views/widgets/green_circle.dart';
 import 'package:graduation_project/features/patient/splash/presentation/views/widgets/green_rectangle.dart';
 import 'package:graduation_project/features/patient/splash/presentation/views/widgets/grey_circle.dart';

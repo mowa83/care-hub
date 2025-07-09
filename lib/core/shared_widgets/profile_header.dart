@@ -11,7 +11,7 @@ class ProfileHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 74.h),
+      padding: EdgeInsets.only(top: 64.h),
       child: Stack(
         alignment: Alignment.center,
         children: [

@@ -30,7 +30,7 @@ class NotificationTokenService {
 
   Future<void> sendTokenToServer(String token) async {
     print('📨 sendTokenToServer بدأت');
-    Future <String> getToken() async {
+    Future<String> getToken() async {
       final accessToken = await SharedPrefsUtils.getAccess();
       if (accessToken == null) {
         throw Exception('No token found');
@@ -38,18 +38,20 @@ class NotificationTokenService {
 
       return accessToken;
     }
-    try{
+
+    try {
       final accessToken = await getToken();
-      final response = await http.post(
-      Uri.parse('$baseUrl/api/notifications/register-device/'),
-      headers: {'Content-Type': 'application/json','Authorization': 'Bearer $accessToken',},
-      body: '{"registration_id": "$token","device_type": "android"}',
-    );
-    print('ok');
-    }
-    catch(e){
+      await http.post(
+        Uri.parse('$baseUrl/api/notifications/register-device/'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+        },
+        body: '{"registration_id": "$token","device_type": "android"}',
+      );
+      print('ok');
+    } catch (e) {
       print('❌ Error: $e');
     }
   }
 }
-
