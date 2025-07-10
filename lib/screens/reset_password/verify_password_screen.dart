@@ -73,14 +73,14 @@ class _VerifyPasswordScreenState extends State<VerifyPasswordScreen> {
             onTap: _onVerify,
           ),
           const SizedBox(height: 20),
-          Center(
-            child: ResendCodeWidget(
-              initialCountdown: 40,
-              onResend: () {
-                // Handle resend code logic here if needed
-              },
-            ),
-          ),
+          // Center(
+          //   child: ResendCodeWidget(
+          //     initialCountdown: 40,
+          //     onResend: () {
+              
+          //     },
+          //   ),
+          // ),
         ],
       ),
     );

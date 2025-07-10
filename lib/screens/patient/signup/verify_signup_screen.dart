@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:graduation_project/core/route_utils/route_utils.dart';
 import 'package:graduation_project/core/shared_widgets/header_row.dart';
 import 'package:graduation_project/core/utils/colors.dart';
-import 'package:graduation_project/features/patient/home/presentation/views/home_view.dart';
+import 'package:graduation_project/screens/login/login_screen.dart';
 import 'package:graduation_project/screens/patient/signup/service/verification_service.dart';
 import 'package:graduation_project/widgets/app_button.dart';
 import 'package:graduation_project/widgets/app_pin_code_field.dart';
-import 'package:graduation_project/widgets/app_resend_code.dart';
 import 'package:graduation_project/widgets/app_text.dart';
+import 'package:graduation_project/widgets/verification_dialog.dart'; 
 
 class VerifySignupScreen extends StatefulWidget {
   const VerifySignupScreen({super.key});
@@ -25,10 +25,16 @@ class _VerifySignupScreenState extends State<VerifySignupScreen> {
       try {
         final success = await _authService.activateAccount(_code);
         if (success) {
-          RouteUtils.push(context, HomeView());
+          showVerificationDialog(
+            context: context,
+            onContinue: () {
+              Navigator.of(context).pop(); 
+              RouteUtils.push(context,  LoginScreen());
+            },
+          );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Verification failed. Please try again.')),
+            const SnackBar(content: Text('Verification failed. Please try again.')),
           );
         }
       } catch (e) {
@@ -38,7 +44,7 @@ class _VerifySignupScreenState extends State<VerifySignupScreen> {
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter a valid 4-digit code.')),
+        const SnackBar(content: Text('Please enter a valid 4-digit code.')),
       );
     }
   }
@@ -47,21 +53,21 @@ class _VerifySignupScreenState extends State<VerifySignupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         children: [
           const HeaderRow(
             text: 'Verify Your Email',
           ),
-          SizedBox(height: 50),
-          Center(
+          const SizedBox(height: 50),
+          const Center(
             child: AppText(
-              title: 'Enter your email to receive a ',
+              title: 'Enter your email to receive a',
               fontWeight: FontWeight.w400,
               fontSize: 16,
               color: AppColors.grey,
             ),
           ),
-          Center(
+          const Center(
             child: AppText(
               title: 'verification code',
               fontWeight: FontWeight.w400,
@@ -69,7 +75,7 @@ class _VerifySignupScreenState extends State<VerifySignupScreen> {
               color: AppColors.grey,
             ),
           ),
-          SizedBox(height: 60),
+          const SizedBox(height: 60),
           AppPinCodeField(
             onChanged: (value) {
               setState(() {
@@ -77,18 +83,12 @@ class _VerifySignupScreenState extends State<VerifySignupScreen> {
               });
             },
           ),
-          SizedBox(height: 40),
+          const SizedBox(height: 40),
           AppButton(
             title: 'Verify',
             onTap: _onVerify,
           ),
-          SizedBox(height: 20),
-          Center(
-            child: ResendCodeWidget(
-              initialCountdown: 40,
-              onResend: () {},
-            ),
-          ),
+          const SizedBox(height: 20),
         ],
       ),
     );

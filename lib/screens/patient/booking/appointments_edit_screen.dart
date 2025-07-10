@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graduation_project/core/route_utils/route_utils.dart';
 import 'package:graduation_project/core/shared_widgets/header_row.dart';
 import 'package:graduation_project/core/utils/colors.dart';
-import 'package:graduation_project/screens/patient/booking/appointments_screen.dart';
+import 'package:graduation_project/features/patient/home/presentation/views/home_view.dart';
 import 'package:graduation_project/screens/patient/booking/services/booking/booking_models.dart';
 import 'package:graduation_project/screens/patient/booking/services/booking/booking_services.dart';
 import 'package:graduation_project/widgets/app_text.dart';
@@ -118,13 +118,13 @@ class _AppointmentsEditScreenState extends State<AppointmentsEditScreen> {
                         return Container(
                           margin: const EdgeInsets.all(4.0),
                           decoration: const BoxDecoration(
-                            color: Colors.grey,
+                            color:Color.fromARGB(255, 217,217,217),
                             shape: BoxShape.circle,
                           ),
                           child: Center(
                             child: Text(
                               '${day.day}',
-                              style: const TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.black),
                             ),
                           ),
                         );
@@ -237,11 +237,11 @@ class _AppointmentsEditScreenState extends State<AppointmentsEditScreen> {
                           widget.appointmentId,
                           appointment,
                         );
-                        RouteUtils.push(context, const AppointementsScreen());
+                        RouteUtils.push(context,  HomeView());
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                              'Appointment updated for ${DateFormat('dd/MM/yyyy').format(_selectedDay!)} at $_selectedTime',
+                              'Appointment updated successfully',
                             ),
                           ),
                         );

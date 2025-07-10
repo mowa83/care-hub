@@ -4,7 +4,9 @@ import 'package:graduation_project/core/utils/colors.dart';
 import 'package:graduation_project/screens/patient/booking/appointments_edit_screen.dart';
 import 'package:graduation_project/screens/patient/booking/services/appointment/appointment_model.dart';
 import 'package:graduation_project/screens/patient/booking/services/appointment/appointment_services.dart';
+import 'package:graduation_project/screens/patient/booking/services/booking/booking_services.dart';
 import 'package:graduation_project/widgets/app_text.dart';
+import 'package:graduation_project/widgets/cancel_dialog.dart';
 import 'package:intl/intl.dart';
 
 class AppointementsScreen extends StatefulWidget {
@@ -39,8 +41,7 @@ class _AppointementsScreenState extends State<AppointementsScreen>
       List<AppointmentModel> appointments, bool isPast) {
     final Map<String, List<AppointmentModel>> grouped = {};
     final now = DateTime.now();
-    final dateFormatter =
-        DateFormat('d MMM, yyyy', 'en_US'); 
+    final dateFormatter = DateFormat('d MMM, yyyy', 'en_US');
 
     for (var appointment in appointments) {
       final dateStr = appointment.date ?? '';
@@ -70,7 +71,7 @@ class _AppointementsScreenState extends State<AppointementsScreen>
       return {
         'date': entry.key,
         'day': _getDayLabel(entryDate, now),
-        'originalDate': entryDate, 
+        'originalDate': entryDate,
         'appointments': entry.value.map((appointment) {
           final time = appointment.time ?? '';
           String formattedTime = '';
@@ -82,9 +83,9 @@ class _AppointementsScreenState extends State<AppointementsScreen>
             formattedTime = time;
           }
           return {
-            'id': appointment.id, 
+            'id': appointment.id,
             'doctor': appointment.doctor?.doctorName ?? 'Unknown',
-            'doctorId': appointment.doctor?.id, 
+            'doctorId': appointment.doctor?.id,
             'time': formattedTime,
             'status': isPast ? 'Done' : 'Edit',
             'specialty': appointment.doctor?.specialty ?? 'Unknown',
@@ -109,11 +110,28 @@ class _AppointementsScreenState extends State<AppointementsScreen>
     return DateFormat('EEEE').format(appointmentDate);
   }
 
+  Future<void> _cancelAppointment(int appointmentId) async {
+    try {
+      await BookingService().cancelAppointment(appointmentId);
+      setState(() {
+        _upcomingAppointmentsFuture =
+            AppointmentService().fetchUpcomingAppointments();
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Appointment cancelled successfully')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to cancel appointment: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body:  Padding(
+        body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,7 +222,22 @@ class _AppointementsScreenState extends State<AppointementsScreen>
 
   Widget _buildAppointmentList(List<Map<String, dynamic>> appointments) {
     if (appointments.isEmpty) {
-      return const Center(child: Text('No appointments found'));
+      return const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image(
+            image: AssetImage('assets/images/Line.png'),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          AppText(
+            title: 'No Reservation Yet',
+            fontSize: 18,
+            fontWeight: FontWeight.w400,
+          )
+        ],
+      );
     }
     return ListView.builder(
       itemCount: appointments.length,
@@ -239,7 +272,7 @@ class _AppointementsScreenState extends State<AppointementsScreen>
                     appointment['image'] != null &&
                             appointment['image'].isNotEmpty
                         ? CircleAvatar(
-                            radius: 30,
+                            radius: 35,
                             backgroundImage: NetworkImage(appointment['image']),
                             onBackgroundImageError: (_, __) =>
                                 const Icon(Icons.error),
@@ -255,25 +288,53 @@ class _AppointementsScreenState extends State<AppointementsScreen>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              AppText(
-                                title: appointment['doctor'],
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    AppText(
+                                      title: appointment['doctor'],
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                    Text(
+                                      appointment['specialty'],
+                                      style:
+                                          const TextStyle(color: Colors.grey),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color:
+                                            Color.fromARGB(255, 228, 250, 248),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Text(
+                                        'At ${appointment['time']}',
+                                        style: const TextStyle(fontSize: 14),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              appointment['status'] == 'Done'
-                                  ? const Row(
-                                      children: [
-                                        AppText(
-                                          title: '• Done',
-                                          color: AppColors.primary,
-                                          fontSize: 14,
-                                        )
-                                      ],
+                              const SizedBox(width: 8),
+                              Column(
+                                children: [
+                                  if (appointment['status'] == 'Done')
+                                    const AppText(
+                                      title: '• Done',
+                                      color: AppColors.primary,
+                                      fontSize: 14,
                                     )
-                                  : AppText(
-                                      onTap: () {
+                                  else ...[
+                                    IconButton(
+                                      icon: const Icon(Icons.edit,
+                                          color: AppColors.primary),
+                                      tooltip: 'Edit',
+                                      onPressed: () {
                                         RouteUtils.push(
                                           context,
                                           AppointmentsEditScreen(
@@ -282,30 +343,25 @@ class _AppointementsScreenState extends State<AppointementsScreen>
                                           ),
                                         );
                                       },
-                                      title: 'Edit',
-                                      color: AppColors.primary,
-                                      decorationColor: AppColors.primary,
-                                      fontSize: 14,
-                                      decoration: TextDecoration.underline,
                                     ),
+                                    IconButton(
+                                      icon: const Icon(Icons.delete,
+                                          color: Colors.red),
+                                      tooltip: 'Delete',
+                                      onPressed: () {
+                                        showCancelAppointmentDialog(
+                                          context: context,
+                                          onConfirm: () {
+                                            _cancelAppointment(
+                                                appointment['id']);
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ],
+                              )
                             ],
-                          ),
-                          Text(
-                            appointment['specialty'],
-                            style: const TextStyle(color: Colors.grey),
-                          ),
-                          const SizedBox(height: 4),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 228, 250, 248),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              'At ${appointment['time']}',
-                              style: const TextStyle(fontSize: 14),
-                            ),
                           ),
                         ],
                       ),

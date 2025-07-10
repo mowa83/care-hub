@@ -5,7 +5,7 @@ class SignupModel {
   final String confirmPassword;
   final String userType;
   final String gender;
-  final int phoneNumber;
+  final String phoneNumber;
   final String birthDate;
   final String chronicDiseases;
 
@@ -29,7 +29,7 @@ class SignupModel {
       'confirm_password': confirmPassword,
       'user_type': userType,
       'gender': gender,
-      'phone_number': phoneNumber,
+      'phone_number': phoneNumber, 
       'birth_date': birthDate,
       'chronic_diseases': chronicDiseases,
     };

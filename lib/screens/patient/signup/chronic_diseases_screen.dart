@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:graduation_project/core/route_utils/route_utils.dart';
 import 'package:graduation_project/core/utils/colors.dart';
-import 'package:graduation_project/features/patient/splash/presentation/views/widgets/short_next_button.dart';
 import 'package:graduation_project/screens/patient/signup/signup_screen.dart';
+import 'package:graduation_project/widgets/app_button.dart';
 import 'package:graduation_project/widgets/app_text.dart';
 
 class ChronicDiseasesScreen extends StatelessWidget {
@@ -48,11 +49,9 @@ class ChronicDiseasesScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  const SizedBox(height: 20),
                   Container(
-                    height: 800,
+                    // Remove fixed height to allow content to size naturally
                     decoration: BoxDecoration(
                       color: AppColors.white,
                       boxShadow: const [
@@ -71,6 +70,7 @@ class ChronicDiseasesScreen extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const AppText(
                             title: 'Do you suffer from chronic diseases?',
@@ -85,9 +85,8 @@ class ChronicDiseasesScreen extends StatelessWidget {
                             cursorColor: AppColors.primary,
                             decoration: InputDecoration(
                               filled: true,
-                              fillColor:
-                                  const Color.fromARGB(255, 246, 246, 246),
-                              hintText: 'Enter Your chronic diseases',
+                              fillColor: const Color.fromARGB(255, 246, 246, 246),
+                              hintText: 'Enter your chronic diseases',
                               hintStyle: TextStyle(
                                 color: AppColors.grey,
                                 fontSize: 12,
@@ -96,29 +95,30 @@ class ChronicDiseasesScreen extends StatelessWidget {
                                 horizontal: 16,
                                 vertical: 70,
                               ),
-                              enabledBorder:
-                                  getBorder(color: Colors.transparent),
-                              focusedBorder:
-                                  getBorder(color: AppColors.primary),
+                              enabledBorder: getBorder(color: Colors.transparent),
+                              focusedBorder: getBorder(color: AppColors.primary),
                             ),
-                            // Optional: Add validator if you want to enforce input
+                            // You can remove validator if it's optional
                             validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter chronic diseases or leave empty';
-                              }
-                              return null;
+                              return null; // or implement your own rule
                             },
                           ),
                           const SizedBox(height: 20),
-                          SizedBox(
-                            width: 327,
-                            child: Align(
-                              alignment: Alignment.bottomRight,
-                              child: ShortNextButton(
-                                nextScreen: SignupScreen(
-                                  chronicDiseases:
-                                      chronicDiseasesController.text,
-                                ),
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: SizedBox(
+                              width: 130,
+                              height: 48,
+                              child: AppButton(
+                                onTap: () {
+                                  RouteUtils.push(
+                                    context,
+                                    SignupScreen(
+                                      chronicDiseases: chronicDiseasesController.text,
+                                    ),
+                                  );
+                                },
+                                title: 'Next',
                               ),
                             ),
                           ),

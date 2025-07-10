@@ -110,12 +110,12 @@ class _UserTypeBodyState extends State<UserTypeBody> {
                     } else {
                       if (selectedUserType == 'Doctor' ||
                           selectedUserType == 'Nurse') {
-                        RouteUtils.pushAndRemoveAll(
+                        RouteUtils.push(
                           context,
                           SignupDoctorNurseScreen(userType: selectedUserType!),
                         );
                       } else if (selectedUserType == 'Patient') {
-                        RouteUtils.pushAndRemoveAll(
+                        RouteUtils.push(
                             context,  ChronicDiseasesScreen());
                       }
                     }

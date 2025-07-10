@@ -67,7 +67,7 @@ class _ProfileBodyState extends State<PatientScreen> {
                 children:[Column(
                   children: [
                     HeaderRow(
-                      text: 'Nurse Details',
+                      text: 'Patient Details',
                     ),
                 // SizedBox(height: 200,),
                 Expanded(
@@ -142,54 +142,6 @@ class _ProfileBodyState extends State<PatientScreen> {
                     )
                   ],
                 ),
-                  Positioned(
-                    bottom: 12,
-                    left: 16,
-                    right: 16,
-                    child: InkWell(
-                      onTap: () async {
-                        try {
-                          final chatService = ChatService();
-                          final chatData = await chatService.startChat(widget.patientId);
-                          RouteUtils.push(
-                            context,
-                            ChatRoomScreen(
-                              chatId: chatData['chatId'],
-                              targetId: chatData['targetId'],
-                              targetName: chatData['targetName'],
-                              targetImage: chatData['targetImage'],
-                            ),
-                          );
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Failed to start chat: $e')),
-                          );
-                        }
-                      },
-                      child: Container(
-                        height: 56,
-                        decoration: BoxDecoration(
-                          color: AppColors.primary,
-                          borderRadius: BorderRadius.circular(60),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Image(image: AssetImage('assets/images/Group.png')),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            AppText(
-                              title: 'Chat',
-                              color: AppColors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
                 ]
               );
             }));

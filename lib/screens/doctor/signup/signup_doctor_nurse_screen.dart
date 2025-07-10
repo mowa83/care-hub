@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graduation_project/core/route_utils/route_utils.dart';
+import 'package:graduation_project/core/shared_widgets/header_row.dart';
 import 'package:graduation_project/core/utils/colors.dart';
 import 'package:graduation_project/core/utils/validator.dart';
 import 'package:graduation_project/screens/doctor/signup/doc_nurse_signup.dart';
@@ -40,13 +41,7 @@ class _SignupDoctorNurseScreenState extends State<SignupDoctorNurseScreen> {
           padding: EdgeInsets.all(16),
           children: [
             SizedBox(height: 50),
-            Center(
-              child: AppText(
-                title: 'Create Account (${widget.userType})',
-                fontWeight: FontWeight.w500,
-                fontSize: 25,
-              ),
-            ),
+            HeaderRow(text: 'Create Account'),
             SizedBox(height: 40),
             AppHeadLine(photo: 'profile', labal: 'Full Name'),
             AppTextField(
@@ -98,7 +93,7 @@ class _SignupDoctorNurseScreenState extends State<SignupDoctorNurseScreen> {
               validator: Validator.date,
               onDateSelected: (apiDate) {
                 setState(() {
-                  selectedBirthDate = apiDate; 
+                  selectedBirthDate = apiDate;
                 });
               },
             ),

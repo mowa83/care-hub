@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:graduation_project/core/route_utils/route_utils.dart';
+import 'package:graduation_project/core/shared_widgets/header_row.dart';
 import 'package:graduation_project/core/utils/colors.dart';
 import 'package:graduation_project/core/utils/validator.dart';
 import 'package:graduation_project/screens/patient/signup/service/signup_model.dart';
@@ -32,7 +33,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final confirmPasswordController = TextEditingController();
   final birthDateController = TextEditingController();
   String? selectedGender;
-  String? selectedBirthDateString; 
+  String? selectedBirthDateString;
 
   @override
   void dispose() {
@@ -61,13 +62,7 @@ class _SignupScreenState extends State<SignupScreen> {
           padding: const EdgeInsets.all(16),
           children: [
             const SizedBox(height: 50),
-            const Center(
-              child: AppText(
-                title: 'Create Account',
-                fontWeight: FontWeight.w500,
-                fontSize: 25,
-              ),
-            ),
+            HeaderRow(text: 'Create Account'),
             const SizedBox(height: 40),
             AppHeadLine(photo: 'profile', labal: 'Full Name'),
             AppTextField(
@@ -103,7 +98,12 @@ class _SignupScreenState extends State<SignupScreen> {
               controller: confirmPasswordController,
               hint: 'Enter Your Password',
               secure: true,
-              validator: Validator.password,
+              validator: (value) {
+                if (value != passwordController.text) {
+                  return 'Passwords do not match';
+                }
+                return Validator.password(value);
+              },
             ),
             const SizedBox(height: 16),
             AppHeadLine(photo: 'lock', labal: 'Birth Of Date'),
@@ -113,7 +113,7 @@ class _SignupScreenState extends State<SignupScreen> {
               controller: birthDateController,
               validator: Validator.date,
               onDateSelected: (dateString) {
-                selectedBirthDateString = dateString; 
+                selectedBirthDateString = dateString;
               },
             ),
             const SizedBox(height: 16),
@@ -156,18 +156,18 @@ class _SignupScreenState extends State<SignupScreen> {
                       },
                     ),
                     const Expanded(
-                      child: Wrap(
+                      child: Row(
                         children: [
                           AppText(
                             title: 'By Clicking, you agree to',
                             fontWeight: FontWeight.w400,
-                            fontSize: 14,
+                            fontSize: 12,
                             color: AppColors.grey,
                           ),
                           AppText(
                             title: ' Terms & Conditions',
                             fontWeight: FontWeight.w500,
-                            fontSize: 14,
+                            fontSize: 12,
                             color: AppColors.primary,
                           ),
                         ],
@@ -222,10 +222,11 @@ class _SignupScreenState extends State<SignupScreen> {
                     password: passwordController.text,
                     confirmPassword: confirmPasswordController.text,
                     gender: selectedGender ?? '',
-                    phoneNumber: int.tryParse(phoneController.text.trim()) ?? 0,
+                    phoneNumber: phoneController.text.trim(),
                     birthDate: selectedBirthDateString!,
                     chronicDiseases: widget.chronicDiseases ?? '',
                   );
+
                   final response = await SignupServices().signUpPatient(model);
                   if (response.statusCode == 200 ||
                       response.statusCode == 201) {

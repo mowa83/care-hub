@@ -1,0 +1,2 @@
+D:/New folder/care-hub/android/app/.cxx/RelWithDebInfo/47231v6w/arm64-v8a/CMakeFiles/edit_cache.dir
+D:/New folder/care-hub/android/app/.cxx/RelWithDebInfo/47231v6w/arm64-v8a/CMakeFiles/rebuild_cache.dir

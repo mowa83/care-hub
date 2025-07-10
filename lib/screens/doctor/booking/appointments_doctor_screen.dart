@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:graduation_project/core/themes/colors.dart';
 import 'package:graduation_project/core/utils/colors.dart';
+import 'package:graduation_project/screens/doctor/booking/patient_screen.dart';
 import 'package:graduation_project/screens/doctor/booking/services/doctor_appointment/appointment_doctor_model.dart';
 import 'package:graduation_project/widgets/app_text.dart';
 import 'package:intl/intl.dart';
-import 'services/doctor_appointment/appointment_doctor_services.dart';
+import 'package:graduation_project/screens/doctor/booking/services/doctor_appointment/appointment_doctor_services.dart';
+import 'package:graduation_project/core/route_utils/route_utils.dart';
 
 class AppointmentsDoctorScreen extends StatefulWidget {
   const AppointmentsDoctorScreen({super.key});
@@ -93,6 +98,7 @@ class _AppointmentsDoctorScreenState extends State<AppointmentsDoctorScreen>
         'day': day,
         'appointments': appointments
             .map((a) => {
+                  'patientId': a.patientId,
                   'patientName': a.patientName ?? 'Unknown',
                   'time': a.time ?? 'N/A',
                   'phoneNumber': a.phoneNumber ?? 'N/A',
@@ -209,8 +215,22 @@ class _AppointmentsDoctorScreenState extends State<AppointmentsDoctorScreen>
   Widget _buildAppointmentList(List<Map<String, dynamic>> appointments,
       {required bool isUpcoming}) {
     if (appointments.isEmpty) {
-      return const Center(child: Text('No appointments available'));
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image(image: AssetImage('assets/images/Line.png')),
+            SizedBox(height: 5),
+            AppText(
+              title: 'No Reservation Yet',
+              fontSize: 18,
+              fontWeight: FontWeight.w400,
+            ),
+          ],
+        ),
+      );
     }
+
     return ListView.builder(
       itemCount: appointments.length,
       itemBuilder: (context, index) {
@@ -222,7 +242,6 @@ class _AppointmentsDoctorScreenState extends State<AppointmentsDoctorScreen>
               alignment: Alignment.centerRight,
               child: Text(
                 '${section['date']}',
-                textAlign: TextAlign.left,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -234,73 +253,82 @@ class _AppointmentsDoctorScreenState extends State<AppointmentsDoctorScreen>
             ...section['appointments'].map<Widget>((appointment) {
               return Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  children: [
-                    const CircleAvatar(
-                      radius: 30,
-                      child:
-                          Image(image: AssetImage('assets/images/image1.png')),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              AppText(
-                                title: appointment['patientName'],
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              (!isUpcoming && appointment['status'] == 'Done')
-                                  ? const Row(
-                                      children: [
-                                        AppText(
-                                          title: '• Done',
-                                          color: AppColors.primary,
-                                        ),
-                                      ],
-                                    )
-                                  : AppText(
-                                      title: '',
-                                      color: AppColors.primary,
-                                    ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.call_outlined,
-                                color: AppColors.primary,
-                                size: 15,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                appointment['phoneNumber'],
-                                style: const TextStyle(
-                                  color: Colors.black,
+                child: InkWell(
+                  onTap: () {
+                    final patientId = appointment['patientId'] as int?;
+                    if (patientId != null) {
+                      RouteUtils.push(
+                        context,
+                        PatientScreen(patientId: patientId),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Patient ID not available'),
+                        ),
+                      );
+                    }
+                  },
+                  borderRadius: BorderRadius.circular(12),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/profile-circle.svg',
+                        width: 59.w,
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                AppText(
+                                  title: appointment['patientName'],
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Container(
+                                (!isUpcoming && appointment['status'] == 'Done')
+                                    ? const AppText(
+                                        title: '• Done',
+                                        color: AppColors.primary,
+                                      )
+                                    : const SizedBox.shrink(),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.call_outlined,
+                                  color: AppColors.primary,
+                                  size: 15,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  appointment['phoneNumber'],
+                                  style: const TextStyle(color: Colors.black),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Container(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 12, vertical: 4),
                               decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 228, 250, 248),
+                                color: const Color.fromARGB(255, 228, 250, 248),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
                                 'At ${_formatTime(appointment['time'])}',
                                 style: const TextStyle(fontSize: 14),
-                              ))
-                        ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             }).toList(),
