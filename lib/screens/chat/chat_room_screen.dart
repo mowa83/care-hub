@@ -101,6 +101,7 @@ class ChatRoomScreenState extends State<ChatRoomScreen> {
         title: Row(
           children: [
             CircleAvatar(
+              backgroundColor: AppColors.white,
               radius: 25,
               backgroundImage: widget.targetImage.isNotEmpty
                   ? NetworkImage(widget.targetImage)

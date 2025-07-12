@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:graduation_project/core/constants/filters.dart';
 import 'package:graduation_project/core/route_utils/route_utils.dart';
+import 'package:graduation_project/core/shared_widgets/header_row.dart';
 import 'package:graduation_project/screens/doctor/signup/services/signup_doctor_model.dart';
 import 'package:graduation_project/screens/doctor/signup/services/signup_doctor_service.dart';
 import 'package:graduation_project/screens/patient/signup/verify_signup_screen.dart';
@@ -11,6 +12,7 @@ import 'package:graduation_project/widgets/app_drop_list.dart';
 import 'package:graduation_project/widgets/app_head_line.dart';
 import 'package:graduation_project/widgets/app_image_picker.dart';
 import 'package:graduation_project/widgets/app_text.dart';
+import 'package:graduation_project/widgets/success_dialog.dart';
 
 
 class DocNurseSignup extends StatefulWidget {
@@ -44,50 +46,49 @@ class _DocNurseSignupState extends State<DocNurseSignup> {
     _signupService = DoctorNurseSignupService(_dio);
   }
 
-  Future<void> submitSignup() async {
-    if (!formKey.currentState!.validate()) return;
+Future<void> submitSignup() async {
+  if (!formKey.currentState!.validate()) return;
 
-    if (selectedImage == null || selectedCard == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select your photo and card.')),
-      );
-      return;
-    }
-    if (selectedGovernorate == null || selectedCity == null || selectedSpecialty == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select governorate, city, and specialty.')),
-      );
-      return;
-    }
-
-    final signupData = DoctorNurseSignupModel(
-      username: widget.formData["fullName"],
-      email: widget.formData["email"],
-      password: widget.formData["password"],
-      confirmPassword: widget.formData["password"],
-      userType: widget.userType,
-      gender: widget.formData["gender"],
-      phoneNumber: widget.formData["phone"],
-      birthDate: widget.formData["birthDate"],
-      image: selectedImage!,
-      card: selectedCard!,
-      governorate: selectedGovernorate!,
-      city: selectedCity!,
-      specialty: selectedSpecialty!,
+  if (selectedImage == null || selectedCard == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Please select your photo and card.')),
     );
-
-    try {
-      await _signupService.signupDoctorNurse(signupData);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Signup successful!')),
-      );
-      RouteUtils.push(context, const VerifySignupScreen());
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
-    }
+    return;
   }
+  if (selectedGovernorate == null || selectedCity == null || selectedSpecialty == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Please select governorate, city, and specialty.')),
+    );
+    return;
+  }
+
+  final signupData = DoctorNurseSignupModel(
+    username: widget.formData["fullName"],
+    email: widget.formData["email"],
+    password: widget.formData["password"],
+    confirmPassword: widget.formData["password"],
+    userType: widget.userType,
+    gender: widget.formData["gender"],
+    phoneNumber: widget.formData["phone"],
+    birthDate: widget.formData["birthDate"],
+    image: selectedImage!,
+    card: selectedCard!,
+    governorate: selectedGovernorate!,
+    city: selectedCity!,
+    specialty: selectedSpecialty!,
+  );
+
+  try {
+    await _signupService.signupDoctorNurse(signupData);
+    // Show the custom success dialog
+    showSuccessDialog(context: context);
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error: $e')),
+    );
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -98,13 +99,7 @@ class _DocNurseSignupState extends State<DocNurseSignup> {
           padding: const EdgeInsets.all(16),
           children: [
             const SizedBox(height: 50),
-            const Center(
-              child: AppText(
-                title: 'Create Account',
-                fontWeight: FontWeight.w500,
-                fontSize: 25,
-              ),
-            ),
+            HeaderRow(text: 'Create Account'),
             const SizedBox(height: 40),
             AppHeadLine(photo: 'gallery', labal: 'Your Photo'),
             const SizedBox(height: 10),

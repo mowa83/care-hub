@@ -159,7 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: passwordController,
                   hint: 'Enter Your Password',
                   secure: true,
-                  // validator: Validator.password,
+                  validator: Validator.password,
                 ),
                 const SizedBox(height: 8),
                 Align(
@@ -213,82 +213,82 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Divider(
-                        thickness: 0.7,
-                        color: Colors.grey.withOpacity(0.5),
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 0,
-                        horizontal: 10,
-                      ),
-                      child: Text(
-                        'Or Login with',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 13,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Divider(
-                        thickness: 0.7,
-                        color: Colors.grey.withOpacity(0.5),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.grey),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: const Image(
-                          image: AssetImage('assets/images/Facebook.png'),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.grey),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: const Image(
-                          image: AssetImage('assets/images/Frame 36695.png'),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.grey),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: const Image(
-                          image: AssetImage('assets/images/sms1.png'),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                // const SizedBox(height: 30),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     Expanded(
+                //       child: Divider(
+                //         thickness: 0.7,
+                //         color: Colors.grey.withOpacity(0.5),
+                //       ),
+                //     ),
+                //     const Padding(
+                //       padding: EdgeInsets.symmetric(
+                //         vertical: 0,
+                //         horizontal: 10,
+                //       ),
+                //       child: Text(
+                //         'Or Login with',
+                //         style: TextStyle(
+                //           color: Colors.black,
+                //           fontWeight: FontWeight.w400,
+                //           fontSize: 13,
+                //         ),
+                //       ),
+                //     ),
+                //     Expanded(
+                //       child: Divider(
+                //         thickness: 0.7,
+                //         color: Colors.grey.withOpacity(0.5),
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                // const SizedBox(height: 20),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     Container(
+                //       decoration: BoxDecoration(
+                //         border: Border.all(color: AppColors.grey),
+                //         borderRadius: BorderRadius.circular(100),
+                //       ),
+                //       child: IconButton(
+                //         onPressed: () {},
+                //         icon: const Image(
+                //           image: AssetImage('assets/images/Facebook.png'),
+                //         ),
+                //       ),
+                //     ),
+                //     const SizedBox(width: 10),
+                //     Container(
+                //       decoration: BoxDecoration(
+                //         border: Border.all(color: AppColors.grey),
+                //         borderRadius: BorderRadius.circular(100),
+                //       ),
+                //       child: IconButton(
+                //         onPressed: () {},
+                //         icon: const Image(
+                //           image: AssetImage('assets/images/Frame 36695.png'),
+                //         ),
+                //       ),
+                //     ),
+                //     const SizedBox(width: 10),
+                //     Container(
+                //       decoration: BoxDecoration(
+                //         border: Border.all(color: AppColors.grey),
+                //         borderRadius: BorderRadius.circular(100),
+                //       ),
+                //       child: IconButton(
+                //         onPressed: () {},
+                //         icon: const Image(
+                //           image: AssetImage('assets/images/sms1.png'),
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
               ],
             ),
           ),

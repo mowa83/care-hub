@@ -10,6 +10,7 @@ class BookingService {
     _dio.options.baseUrl = baseUrl;
     _dio.options.headers['Content-Type'] = 'application/json';
   }
+
   Future<void> init() async {
     final token = await SharedPrefsUtils.getAccess();
     if (token != null) {
@@ -75,4 +76,22 @@ class BookingService {
       throw Exception('Failed to update appointment: $e');
     }
   }
+
+Future<void> cancelAppointment(int appointmentId) async {
+  await init();
+  try {
+    final response = await _dio.delete(
+      '/api/appointment/$appointmentId/cancel/',
+    );
+    if (response.statusCode != 200 && response.statusCode != 201 && response.statusCode != 204) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        error: 'Failed to cancel appointment: ${response.statusCode}',
+      );
+    }
+  } catch (e) {
+    throw Exception('Failed to cancel appointment: $e');
+  }
+}
 }

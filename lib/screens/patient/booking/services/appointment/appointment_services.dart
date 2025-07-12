@@ -10,6 +10,7 @@ class AppointmentService {
     _dio.options.baseUrl = baseUrl;
     _dio.options.headers['Content-Type'] = 'application/json';
   }
+
   Future<void> init() async {
     final token = await SharedPrefsUtils.getAccess();
     if (token != null) {
@@ -21,39 +22,37 @@ class AppointmentService {
     await init();
     try {
       final response = await _dio.get('/api/patient/appointments/past/');
-      if (response.statusCode == 200) {
-        final List<dynamic> data = response.data;
-        return data.map((json) => AppointmentModel.fromJson(json)).toList();
-      } else {
-        throw DioException(
-          requestOptions: response.requestOptions,
-          response: response,
-          error: 'Failed to load past appointments: ${response.statusCode}',
-        );
-      }
+      final List<dynamic> data = response.data;
+      return data.map((json) => AppointmentModel.fromJson(json)).toList();
+    } on DioException catch (e) {
+      throw Exception("Error: ${e.response?.data['detail'] ?? 'Could not fetch past appointments.'}");
     } catch (e) {
-      throw Exception('Failed to load past appointments: $e');
+      throw Exception("Unexpected error: $e");
     }
   }
 
   Future<List<AppointmentModel>> fetchUpcomingAppointments() async {
-    await init(); 
+    await init();
     try {
       final response = await _dio.get('/api/patient/appointments/upcoming/');
-      if (response.statusCode == 200) {
-        final List<dynamic> data = response.data;
-        return data.map((json) => AppointmentModel.fromJson(json)).toList();
-      } else {
-        throw DioException(
-          requestOptions: response.requestOptions,
-          response: response,
-          error: 'Failed to load upcoming appointments: ${response.statusCode}',
-        );
-      }
+      final List<dynamic> data = response.data;
+      return data.map((json) => AppointmentModel.fromJson(json)).toList();
+    } on DioException catch (e) {
+      throw Exception("Error: ${e.response?.data['detail'] ?? 'Could not fetch upcoming appointments.'}");
     } catch (e) {
-      throw Exception('Failed to load upcoming appointments: $e');
+      throw Exception("Unexpected error: $e");
     }
   }
 
-  getAvailableSlots(int doctorId) {}
+  Future<List<dynamic>> getAvailableSlots(int doctorId) async {
+    await init();
+    try {
+      final response = await _dio.get('/api/slot/doctor/$doctorId/');
+      return response.data;
+    } on DioException catch (e) {
+      throw Exception("Error: ${e.response?.data['detail'] ?? 'Could not fetch available slots.'}");
+    } catch (e) {
+      throw Exception("Unexpected error: $e");
+    }
+  }
 }

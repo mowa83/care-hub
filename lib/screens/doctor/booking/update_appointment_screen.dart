@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graduation_project/core/shared_widgets/header_row.dart';
 import 'package:graduation_project/screens/doctor/booking/services/add_slots/add_slots_model.dart';
 import 'package:graduation_project/screens/doctor/booking/services/add_slots/add_slots_services.dart';
 import 'package:intl/intl.dart';
@@ -28,26 +29,28 @@ class _UpdateAppointmentScreenState extends State<UpdateAppointmentScreen> {
   List<String> _availableTimeSlots = [];
   bool _isUpdatingSlot = false;
   final AddSlotsServices _addSlotsServices = AddSlotsServices();
-  final Future<List<AvailableSlots>> _slotsFuture =
-      AddSlotsServices().fetchAvailableSlots();
+  late final Future<List<AvailableSlots>> _slotsFuture;
+
   final List<String> _timeSlots = [
-    '09:00 AM',
-    '09:30 AM',
-    '10:00 AM',
-    '10:30 AM',
-    '11:00 AM',
-    '11:30 AM',
+    '01:00 PM',
+    '02:00 PM',
     '03:00 PM',
-    '03:30 PM',
     '04:00 PM',
-    '04:30 PM',
     '05:00 PM',
-    '05:30 PM',
+    '06:00 PM',
+    '07:00 PM',
+    '08:00 PM',
+    '09:00 PM',
+    '10:00 PM',
+    '11:00 PM',
+    '12:00 AM',
   ];
 
   @override
   void initState() {
     super.initState();
+    _slotsFuture = _addSlotsServices.fetchAvailableSlots();
+
     final slotDate = DateTime.parse(widget.slot.date!);
     final today = DateTime.now();
     _selectedDay =
@@ -61,6 +64,7 @@ class _UpdateAppointmentScreenState extends State<UpdateAppointmentScreen> {
     _availableTimeSlots = slots
         .where((slot) {
           if (slot.date == null || _selectedDay == null) return false;
+          if (slot.id == widget.slot.id) return false;
           final slotDate = DateTime.parse(slot.date!);
           return isSameDay(slotDate, _selectedDay!);
         })
@@ -84,7 +88,7 @@ class _UpdateAppointmentScreenState extends State<UpdateAppointmentScreen> {
         !(_selectedDay == DateTime.parse(widget.slot.date!) &&
             _selectedTime == _convertTo12Hour(widget.slot.time!))) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('This time slot is already booked')),
+        const SnackBar(content: Text('This time slot is already added')),
       );
       return;
     }
@@ -100,22 +104,22 @@ class _UpdateAppointmentScreenState extends State<UpdateAppointmentScreen> {
         'doctor_name': widget.slot.doctorName,
         'specialty': widget.slot.specialty,
       };
-      final result =
-          await _addSlotsServices.updateSlot(widget.slot.id!, slotData);
+      await _addSlotsServices.updateSlot(widget.slot.id!, slotData);
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Slot updated to $formattedDate at $_selectedTime (${result.message})',
-          ),
+        const SnackBar(
+          content: Text('Slot updated successfully'),
         ),
       );
       widget.onUpdate();
       Navigator.pop(context);
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error updating slot: $e')),
       );
     } finally {
+      if (!mounted) return;
       setState(() {
         _isUpdatingSlot = false;
       });
@@ -125,6 +129,7 @@ class _UpdateAppointmentScreenState extends State<UpdateAppointmentScreen> {
   bool _hasAvailableSlots(DateTime day, List<AvailableSlots> slots) {
     return slots.any((slot) {
       if (slot.date == null) return false;
+      if (slot.id == widget.slot.id) return false;
       final slotDate = DateTime.parse(slot.date!);
       return isSameDay(slotDate, day);
     });
@@ -154,12 +159,8 @@ class _UpdateAppointmentScreenState extends State<UpdateAppointmentScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 36),
-                  Center(
-                    child: AppText(
-                      title: 'Update Appointment',
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  const HeaderRow(
+                    text: 'Update Appointment',
                   ),
                   const SizedBox(height: 36),
                   AppText(
@@ -256,12 +257,12 @@ class _UpdateAppointmentScreenState extends State<UpdateAppointmentScreen> {
                                 itemCount: _timeSlots.length,
                                 itemBuilder: (context, index) {
                                   final time = _timeSlots[index];
-                                  final isAvailable =
+                                  final isBooked =
                                       _availableTimeSlots.contains(time);
                                   final isSelected =
-                                      _selectedTime == time && !isAvailable;
+                                      _selectedTime == time && !isBooked;
                                   return GestureDetector(
-                                    onTap: isAvailable
+                                    onTap: isBooked
                                         ? null
                                         : () {
                                             setState(() {
@@ -273,19 +274,21 @@ class _UpdateAppointmentScreenState extends State<UpdateAppointmentScreen> {
                                         border: Border.all(
                                             color: const Color(0xFF26A69A)),
                                         borderRadius: BorderRadius.circular(20),
-                                        color: isAvailable
-                                            ? AppColors.primary
+                                        color: isBooked
+                                            ? Colors.grey
                                             : isSelected
-                                                ? AppColors.grey
-                                                : AppColors.white,
+                                                ? AppColors.primary
+                                                : Colors.white,
                                       ),
                                       child: Center(
                                         child: Text(
                                           time,
                                           style: TextStyle(
-                                            color: isAvailable || isSelected
-                                                ? AppColors.white
-                                                : AppColors.primary,
+                                            color: isBooked
+                                                ? Colors.white
+                                                : isSelected
+                                                    ? Colors.white
+                                                    : AppColors.primary,
                                             fontSize: 14,
                                           ),
                                         ),

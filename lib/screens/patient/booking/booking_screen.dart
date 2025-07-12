@@ -229,7 +229,7 @@ class _BookingScreenState extends State<BookingScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            'Appointment booked for ${DateFormat('dd/MM/yyyy').format(_selectedDay!)} at $_selectedTime',
+                            'Appointment booked successfully',
                           ),
                         ),
                       );

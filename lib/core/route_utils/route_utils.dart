@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graduation_project/features/patient/home/presentation/views/home_view.dart';
 
 class RouteUtils {
   static Future<dynamic> push(BuildContext context, Widget view) {
@@ -29,4 +30,5 @@ class RouteUtils {
   static void pop(BuildContext context) {
     return Navigator.of(context).pop();
   }
+  static void pushAndRemoveUntil(BuildContext context, HomeView homeView) {}
 }

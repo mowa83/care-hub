@@ -43,6 +43,7 @@ class AppContactCard extends StatelessWidget {
       child: Row(
         children: [
           CircleAvatar(
+            backgroundColor: AppColors.white,
             radius: 30,
             backgroundImage: photo.isNotEmpty
                 ? NetworkImage(photo)

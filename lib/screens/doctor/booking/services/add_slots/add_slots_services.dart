@@ -37,7 +37,7 @@ class AddSlotsServices {
         return [];
       } else {
         throw Exception(
-            'Failed to fetch available slots: ${response.statusCode}');
+            'Failed to fetch weighted slots: ${response.statusCode}');
       }
     } catch (e) {
       if (e is DioError && e.response?.statusCode == 404) {
@@ -81,4 +81,32 @@ class AddSlotsServices {
       throw Exception('Error updating slot: $e');
     }
   }
+
+Future<void> cancelSlot(int slotId) async {
+  await init();
+  try {
+    final response = await _dio.delete('$baseUrl/api/slot/$slotId/cancel/');
+    if (response.statusCode != 200) {
+      throw 'Failed to cancel slot: ${response.statusCode}';
+    }
+  } on DioError catch (e) {
+    String? serverMessage;
+
+    if (e.response?.data is Map && e.response?.data['error'] != null) {
+      serverMessage = e.response?.data['error'];
+
+      if (serverMessage == "لا يمكن حذف الموعد لأنه تم حجزه بالفعل") {
+        serverMessage =
+            "The appointment cannot be deleted because it has already been booked.";
+      }
+    } else {
+      serverMessage = e.response?.data?.toString();
+    }
+
+    throw serverMessage ?? 'Failed to cancel slot.';
+  } catch (e) {
+    throw 'Unexpected error canceling slot.';
+  }
+}
+
 }
