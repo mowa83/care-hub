@@ -46,6 +46,15 @@ class DoctorNurseProfileModel {
     "offer": offer,
     "services": services,
   };
+  Map<String, dynamic> toUpdateJson() => {
+    "user": user?.toUpdateJson(),
+    "price": price,
+    "experience_year": experienceYear,
+    "about": about,
+    "certificates": certificates,
+    "offer": offer,
+    "services": services,
+  };
 }
 
 class User {
@@ -81,5 +90,11 @@ class User {
     "phone_number": phoneNumber,
     "birth_date": birthDate?.toIso8601String(),
     "image": image,
+  };
+  Map<String, dynamic> toUpdateJson() => {
+    "username": username,
+    "gender": gender,
+    "phone_number": phoneNumber,
+    "birth_date": birthDate?.toIso8601String(),
   };
 }

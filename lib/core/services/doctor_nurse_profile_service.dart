@@ -40,7 +40,8 @@ class ApiService {
     try {
       final headers = await _getHeaders();
       final response = await http.put( Uri.parse("$baseUrl/api$url"),
-          headers: headers, body: doctorNurseProfileModelToJson(updatedProfile));
+          headers: headers, body:jsonEncode(updatedProfile.toUpdateJson()));
+          // doctorNurseProfileModelToJson(updatedProfile));
 
       if (response.statusCode == 200) {
         print("Profile updated successfully");

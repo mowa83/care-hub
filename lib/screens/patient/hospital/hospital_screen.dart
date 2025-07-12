@@ -59,8 +59,8 @@ class _HospitalScreenState extends State<HospitalScreen> {
                                       hospital[0].hospital?.image.isNotEmpty
                                   ? Image.network(
                                       hospital[0].hospital?.image,
-                                      width: 90.w,
-                                      height: 90.h,
+                                      width: 342.w,
+                                      height: 174.h,
                                       fit: BoxFit.cover,
                                       errorBuilder: (context, error, stackTrace) {
                                         return Icon(Icons.error);
@@ -75,16 +75,21 @@ class _HospitalScreenState extends State<HospitalScreen> {
                             fontWeight: FontWeight.bold),
                         SizedBox(height: 6),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Image(
-                                image:
-                                    AssetImage('assets/images/location.png')),
-                            SizedBox(width: 5),
-                            AppText(
-                                title: hospital[0].hospital?.address ?? '',
-                                fontSize: 14,
-                                color: AppColors.black),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 5,top: 4),
+                              child: Image(
+                                  image:
+                                      AssetImage('assets/images/location.png')),
+                            ),
+                            // SizedBox(width: 5),
+                            Expanded(
+                              child: AppText(
+                                  title: hospital[0].hospital?.address ?? '',
+                                  fontSize: 14,
+                                  color: AppColors.black),
+                            ),
                           ],
                         ),
                         SizedBox(height: 15),

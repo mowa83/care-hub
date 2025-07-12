@@ -26,7 +26,7 @@ class _ProfileBodyState extends State<PatientScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    userFuture = ApiService().fetchProfile("${1}/Patient/");
+    userFuture = ApiService().fetchProfile("${widget.patientId}/Patient/");
   }
   // ${widget.patientId}
   @override

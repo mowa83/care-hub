@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:graduation_project/core/themes/colors.dart';
 
+import '../constants/config.dart';
+
 class ProfileImage extends StatelessWidget {
   const ProfileImage({super.key, required this.profileImageUrl});
   final String? profileImageUrl;
@@ -19,12 +21,14 @@ class ProfileImage extends StatelessWidget {
         child: ClipOval(
             child: profileImageUrl != null && profileImageUrl!.isNotEmpty
                 ? Image.network(
-                    'http://10.0.2.2:8000$profileImageUrl',
+                    '$baseUrl$profileImageUrl',
                     width: 87.w,
                     height: 87.h,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
-                      return Icon(Icons.error);
+                      return
+                        // img ;
+                        Icon(Icons.error);
                     },
                   )
                 : Icon(Icons.error)));

@@ -259,6 +259,7 @@ class _ProfileBodyState extends State<ProfileBody> {
                               experienceYear:
                                   int.tryParse(_experienceController.text),
                             );
+                            print(doctorNurseProfileModelToJson(updatedProfile));
 
                             final success = await ApiService().updateProfile(
                                 updatedProfile, '/user/edit_Doctor_nurse_profile/');
