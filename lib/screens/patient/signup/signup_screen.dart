@@ -61,7 +61,6 @@ class _SignupScreenState extends State<SignupScreen> {
         body: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            const SizedBox(height: 50),
             HeaderRow(text: 'Create Account'),
             const SizedBox(height: 40),
             AppHeadLine(photo: 'profile', labal: 'Full Name'),

@@ -40,7 +40,6 @@ class _SignupDoctorNurseScreenState extends State<SignupDoctorNurseScreen> {
         body: ListView(
           padding: EdgeInsets.all(16),
           children: [
-            SizedBox(height: 50),
             HeaderRow(text: 'Create Account'),
             SizedBox(height: 40),
             AppHeadLine(photo: 'profile', labal: 'Full Name'),
